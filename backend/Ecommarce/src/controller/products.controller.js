@@ -1,4 +1,5 @@
 const Products = require("../model/products.model");
+const { uploadfiles } = require("../utils/cloundary");
 
 const listproducts = async (req, res) => {
     try {
@@ -56,8 +57,19 @@ const getproducts = async (req, res) => {
 const addproducts = async (req, res) => {
     try {
         console.log(req.body);
+        console.log(req.file);
+        
+        const fileResult = await uploadfiles(req.file.path, "Product");
+        console.log(fileResult);
 
-        const product = await Products.create(req.body);
+        const product = await Products.create({
+            ...req.body,
+            product_img: {
+                public_id: fileResult.public_id,
+                url: fileResult.url
+            }
+           
+        });
         console.log(product);
 
         if (!product) {

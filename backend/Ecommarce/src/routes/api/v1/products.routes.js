@@ -1,5 +1,6 @@
 const express = require("express");
 const { productsController } = require("../../../controller");
+const upload = require("../../../middlewar/upload");
 
 const routes = express.Router();
 
@@ -15,7 +16,8 @@ routes.get(
 )
 
 routes.post(
-    '/add-products', 
+    '/add-products',
+    upload.single("product_img"), 
     productsController.addproducts
 )
 

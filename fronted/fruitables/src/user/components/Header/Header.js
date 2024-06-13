@@ -60,6 +60,27 @@ function Header(props) {
                     <NavLink to='/Page' className="dropdown-item">404 Page</NavLink>
                   </div>
                 </div>
+                <div className="nav-item dropdown">
+                  <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Product</a>
+                  <div className="dropdown-menu m-0 bg-secondary rounded-0">
+                    <li>
+                      <a href="#" className="dropdown-item">Fruits</a>
+                      <ul id="submenu">
+                        <li><a href="#">Citrus Fruits</a></li>
+                        <li><a href="#">Berries</a></li>
+                        <li><a href="#">Stone Fruits</a></li>
+                        <li><a href="#">Tropical Fruits</a></li>
+                        <li><a href="#">Melons</a></li>
+                        <li><a href="#">Pome Fruits</a></li>
+                        <li><a href="#">Exotic Fruits</a></li>
+                      </ul>
+                    </li>
+                    <li><a href="#" className="dropdown-item">Vegetables</a></li>
+                    <li><a href="#" className="dropdown-item">Herbs</a></li>
+                    <li><a href="#" className="dropdown-item">Organic Produce</a></li>
+                    <li><a href="#" className="dropdown-item">Seasonal Produce</a></li>
+                  </div>
+                </div>
                 <NavLink to='/Contact' className="nav-item nav-link">Contact</NavLink>
               </div>
               <div className="d-flex m-3 me-0">
