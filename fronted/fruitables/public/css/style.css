@@ -557,9 +557,16 @@
 .main {
     position: relative !important;
 }
+
 #subright {
     position: absolute !important;
     right: -210px;
     top: 45px;
-    display: none ;
+    /* display: none; */
+}
+
+.productData {
+    width: 300px !important;
+    height: 400px !important;
+    margin: 10px !important;
 }

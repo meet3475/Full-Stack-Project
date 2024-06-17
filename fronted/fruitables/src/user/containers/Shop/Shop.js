@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useEffect } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getShop } from '../../../redux/action/shop.action';
 import { addToCart } from '../../../redux/slice/cart.slice';
 import { ThemeContext } from '../../../Context/ThemeContext';
+import { getProduct } from '../../../redux/action/product.action';
 
 function Shop(props) {
 
@@ -26,7 +27,13 @@ function Shop(props) {
 
   const dispatch = useDispatch();
 
+  const location = useLocation();
+  const { subcategory_id } = location.state || {};
+
   const fruites = useSelector(state => state.fruites)
+
+  const product = useSelector(state => state.product);
+  console.log(product);
 
   const handleAddToCart = (id) => {
     dispatch(addToCart({id, count:1}))
@@ -34,9 +41,15 @@ function Shop(props) {
 
   React.useEffect(() => {
     dispatch(getShop())
+    dispatch(getProduct());
   }, [])
 
   const theme = useContext(ThemeContext);
+
+  const filteredProducts = subcategory_id
+    ? product.product.filter((v) => v.subcategory_id === subcategory_id)
+    : product.product;
+
 
 
   return (
@@ -242,7 +255,7 @@ function Shop(props) {
                 </div>
                 <div className="col-lg-9">
                   <div className="row g-4 justify-content-center">
-                    {
+                    {/* {
                       fruites.fruites.map((v) => (
                         <div className="col-md-6 col-lg-6 col-xl-4">
                           <Link to={`/ShopDetail/${v.id}`}>
@@ -269,6 +282,26 @@ function Shop(props) {
                           </Link>
                         </div>
 
+                      ))
+                    } */}
+
+                    {
+                      filteredProducts.map((v) => (
+                        <div className="rounded position-relative fruite-item productData">
+                              <div className="fruite-img">
+                                <img src={v.product_img.url} className="img-fluid  rounded-top" alt />
+                              </div>
+
+                              <div className="p-4">
+                                <h4>{v.name}</h4>
+                                <p>{v.discription}</p>
+                                <p>{v.stock} / Pcs.</p>
+                                <div className="d-flex justify-content-between flex-lg-wrap">
+                                  <p className="text-dark fs-5 fw-bold mb-0">${v.price} / kg</p>
+                                </div>
+                               
+                              </div>
+                            </div>
                       ))
                     }
                     <div className="col-12">

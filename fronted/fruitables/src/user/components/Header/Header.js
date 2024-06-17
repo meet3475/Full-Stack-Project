@@ -1,7 +1,6 @@
-
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../../../Context/ThemeContext';
 
 import DarkModeIcon from '@mui/icons-material/DarkMode';
@@ -11,18 +10,15 @@ import { getSubData } from '../../../redux/slice/subcategory.slice';
 import { getProduct } from '../../../redux/action/product.action';
 
 function Header(props) {
-
-  const cart = useSelector(state => state.cart)
+  const cart = useSelector(state => state.cart);
   console.log(cart);
 
   const dispatch = useDispatch();
-  const [subcat, setSubcat] = useState([])
+  const [subcat, setSubcat] = useState([]);
 
   const categories = useSelector((state) => state.categories.categories);
   const subcategories = useSelector((state) => state.subcategories.subcategories);
-
-  // console.log(categories);
-  // console.log(subcategories);
+  const product = useSelector((state) => state.product.product);
 
   const totalQtyData = cart.cart.reduce((acc, v) => acc + v.qty, 0);
 
@@ -31,7 +27,9 @@ function Header(props) {
 
   const handleTheme = () => {
     themeContext.toggleTheme(themeContext.theme);
-  }
+  };
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getProduct());
@@ -39,21 +37,28 @@ function Header(props) {
     dispatch(getSubData());
   }, [dispatch]);
 
-
-  const hendalcategory = (category_id) => {
+  const handleCategory = (category_id) => {
     console.log(category_id);
 
-    const subdata = subcategories.filter((v) => v.category_id === category_id)
+    const subdata = subcategories.filter((v) => v.category_id === category_id);
+    setSubcat(subdata);
 
-    setSubcat(subdata)
+    document.getElementById("subright").style.display = "block";
+  };
 
-    document.getElementById("subright").style.display = "block "
-  }
-  console.log(subcat);
+  const handleDisplay = (subcategory_id) => {
+    console.log(subcategory_id);
+
+    const produtdata = product.filter((v) => v.subcategory_id === subcategory_id);
+    console.log(produtdata);
+
+    navigate('/Shop', { state: { subcategory_id } });
+  };
+
   return (
     <div>
       {/* Navbar start */}
-      <div className={`container-fluid fixed-top ${themeContext.theme}`} >
+      <div className={`container-fluid fixed-top ${themeContext.theme}`}>
         <div className="container topbar bg-primary d-none d-lg-block">
           <div className="d-flex justify-content-between">
             <div className="top-info ps-2">
@@ -65,7 +70,6 @@ function Header(props) {
               <a href="#" className="text-white"><small className="text-white mx-2">Terms of Use</small>/</a>
               <a href="#" className="text-white"><small className="text-white ms-2">Sales and Refunds</small></a>
             </div>
-
           </div>
         </div>
         <div className="container px-0">
@@ -89,25 +93,19 @@ function Header(props) {
                     <NavLink to='/Page' className="dropdown-item">404 Page</NavLink>
                   </div>
                 </div>
-
                 <div className="nav-item dropdown main">
                   <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Products</a>
                   <div className="dropdown-menu m-0 bg-secondary rounded-0">
-                    {
-                      categories.map((v) => (
-                        <a href="" onMouseMove={() => hendalcategory(v._id)} className="dropdown-item">{v.name}</a>
-                      ))
-                    }
+                    {categories.map((v) => (
+                      <a href="" onMouseMove={() => handleCategory(v._id)} onClick={() => handleCategory(v._id)} className="dropdown-item">{v.name}</a>
+                    ))}
                   </div>
-                  <div className="dropdown-menu m-0 bg-secondary rounded-0 " id='subright'>
-                    {
-                      subcat.map((v) => (
-                        <a href="" className="dropdown-item">{v.name}</a>
-                      ))
-                    }
+                  <div className="dropdown-menu m-0 bg-secondary rounded-0" id='subright'>
+                    {subcat.map((v) => (
+                      <a href="" onClick={() => handleDisplay(v._id)} className="dropdown-item">{v.name}</a>
+                    ))}
                   </div>
                 </div>
-
                 <NavLink to='/Contact' className="nav-item nav-link">Contact</NavLink>
               </div>
               <div className="d-flex m-3 me-0">
@@ -124,12 +122,8 @@ function Header(props) {
                 <a href="#" className="my-auto">
                   <i className="fas fa-user fa-2x" />
                 </a>
-
-
               </div>
-              {
-                themeContext.theme === 'light' ? <LightModeIcon onClick={handleTheme} /> : <DarkModeIcon onClick={handleTheme} />
-              }
+              {themeContext.theme === 'light' ? <LightModeIcon onClick={handleTheme} /> : <DarkModeIcon onClick={handleTheme} />}
             </div>
           </nav>
         </div>
@@ -154,7 +148,6 @@ function Header(props) {
       </div>
       {/* Modal Search End */}
     </div>
-
   );
 }
 

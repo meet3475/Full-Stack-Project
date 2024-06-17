@@ -27,6 +27,8 @@ function Products() {
     const categories = useSelector((state) => state.categories.categories);
     const subcategories = useSelector((state) => state.subcategories.subcategories);
 
+   
+
     useEffect(() => {
         dispatch(getProduct());
         dispatch(getData());
