@@ -1,16 +1,28 @@
 
-import React, { useContext } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useContext, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../../../Context/ThemeContext';
 
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import { getData } from '../../../redux/action/category.action';
+import { getSubData } from '../../../redux/slice/subcategory.slice';
+import { getProduct } from '../../../redux/action/product.action';
 
 function Header(props) {
 
   const cart = useSelector(state => state.cart)
   console.log(cart);
+
+  const dispatch = useDispatch();
+  const [subcat, setSubcat] = useState([])
+
+  const categories = useSelector((state) => state.categories.categories);
+  const subcategories = useSelector((state) => state.subcategories.subcategories);
+
+  // console.log(categories);
+  // console.log(subcategories);
 
   const totalQtyData = cart.cart.reduce((acc, v) => acc + v.qty, 0);
 
@@ -21,6 +33,23 @@ function Header(props) {
     themeContext.toggleTheme(themeContext.theme);
   }
 
+  useEffect(() => {
+    dispatch(getProduct());
+    dispatch(getData());
+    dispatch(getSubData());
+  }, [dispatch]);
+
+
+  const hendalcategory = (category_id) => {
+    console.log(category_id);
+
+    const subdata = subcategories.filter((v) => v.category_id === category_id)
+
+    setSubcat(subdata)
+
+    document.getElementById("subright").style.display = "block "
+  }
+  console.log(subcat);
   return (
     <div>
       {/* Navbar start */}
@@ -60,27 +89,25 @@ function Header(props) {
                     <NavLink to='/Page' className="dropdown-item">404 Page</NavLink>
                   </div>
                 </div>
-                <div className="nav-item dropdown">
-                  <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Product</a>
+
+                <div className="nav-item dropdown main">
+                  <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Products</a>
                   <div className="dropdown-menu m-0 bg-secondary rounded-0">
-                    <li>
-                      <a href="#" className="dropdown-item">Fruits</a>
-                      <ul id="submenu">
-                        <li><a href="#">Citrus Fruits</a></li>
-                        <li><a href="#">Berries</a></li>
-                        <li><a href="#">Stone Fruits</a></li>
-                        <li><a href="#">Tropical Fruits</a></li>
-                        <li><a href="#">Melons</a></li>
-                        <li><a href="#">Pome Fruits</a></li>
-                        <li><a href="#">Exotic Fruits</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="#" className="dropdown-item">Vegetables</a></li>
-                    <li><a href="#" className="dropdown-item">Herbs</a></li>
-                    <li><a href="#" className="dropdown-item">Organic Produce</a></li>
-                    <li><a href="#" className="dropdown-item">Seasonal Produce</a></li>
+                    {
+                      categories.map((v) => (
+                        <a href="" onMouseMove={() => hendalcategory(v._id)} className="dropdown-item">{v.name}</a>
+                      ))
+                    }
+                  </div>
+                  <div className="dropdown-menu m-0 bg-secondary rounded-0 " id='subright'>
+                    {
+                      subcat.map((v) => (
+                        <a href="" className="dropdown-item">{v.name}</a>
+                      ))
+                    }
                   </div>
                 </div>
+
                 <NavLink to='/Contact' className="nav-item nav-link">Contact</NavLink>
               </div>
               <div className="d-flex m-3 me-0">

@@ -5,12 +5,12 @@ const productsSchema = new mongoose.Schema (
         category_id: {
             type: mongoose.Types.ObjectId,
             ref: 'Categories',
-            // required: true
+            required: true
         },
         subcategory_id: {
             type: mongoose.Types.ObjectId,
             ref: 'Subcategories',
-            // required: true
+            required: true
         },
         sellar_id: {
             type: mongoose.Types.ObjectId,
@@ -38,12 +38,12 @@ const productsSchema = new mongoose.Schema (
         price: {
             type: Number,
             trim: true,
-            // required: true
+            required: true
         },
         stock: {
             type: Number,
             trim: true,
-            // required: true
+            required: true
         },
         isActive: {
             type: Boolean,

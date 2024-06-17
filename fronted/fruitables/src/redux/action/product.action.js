@@ -27,8 +27,13 @@ export const getProduct = () => async (dispatch) => {
 export const addProduct = (product) => async (dispatch) => {
     dispatch(handleLoading())
     try {
-        await axios.post("http://localhost:8000/api/v1/products/add-products", product)
+        await axios.post("http://localhost:8000/api/v1/products/add-products", product, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
             .then((response) => {
+
                 console.log(response.data);
                 dispatch({ type: ADD_PRODUCT, payload: response.data.data })
             })
@@ -56,7 +61,11 @@ export const deleteProduct = (id) => async (dispatch) => {
 export const editProduct = (product) => async (dispatch) => {
     dispatch(handleLoading())
     try {
-        await axios.put(`http://localhost:8000/api/v1/products/update-products/${product._id}`, product)
+        await axios.put(`http://localhost:8000/api/v1/products/update-products/${product._id}`, product, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
             .then((response) => {
                 dispatch({ type: UPDATE_PRODUCT, payload: response.data.data })
             })

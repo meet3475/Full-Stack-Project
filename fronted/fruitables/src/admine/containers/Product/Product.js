@@ -7,13 +7,13 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useFormik } from 'formik';
-import { object, string, number } from 'yup';
+import { object, string, number, mixed } from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
-import {  getData } from '../../../redux/action/category.action';
+import { FormControl, Input, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { getData } from '../../../redux/action/category.action';
 import { getSubData } from '../../../redux/slice/subcategory.slice';
 import { addProduct, deleteProduct, editProduct, getProduct } from '../../../redux/action/product.action';
 
@@ -72,7 +72,14 @@ function Products() {
         { field: 'discription', headerName: 'Product Description', width: 160 },
         { field: 'price', headerName: 'Product Price', width: 160 },
         { field: 'stock', headerName: 'Products Stock', width: 160 },
-
+        {
+            field: "product_img",
+            headerName: "Image",
+            width: 150,
+            renderCell: ({ row }) => (
+                <img src={row.product_img.url} width="50" height="50" />
+            ),
+        },
         {
             field: 'action',
             headerName: 'Action',
@@ -88,6 +95,7 @@ function Products() {
                 </>
             ),
         },
+
     ];
 
     const productSchema = object({
@@ -96,7 +104,17 @@ function Products() {
         price: number().required("Please enter price").positive("Price must be positive"),
         category_id: string().required("Please select a category"),
         subcategory_id: string().required("Please select a subcategory"),
-        stock: number().required("Please enter stock").min(0, "Stock cannot be negative")
+        stock: number().required("Please enter stock").min(0, "Stock cannot be negative"),
+        product_img: mixed()
+            .required("Please select an image")
+            .test("fileSize", "The file is too large", (value) => {
+                return value && value.size <= 2 * 1024 * 1024; // 2MB
+            })
+            .test("fileType", "Unsupported File Format", (value) => {
+                return (
+                    value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
+                );
+            }),
     });
 
     const formik = useFormik({
@@ -107,6 +125,7 @@ function Products() {
             discription: '',
             price: '',
             stock: '',
+            product_img: '',
         },
         validationSchema: productSchema,
         onSubmit: (values, { resetForm }) => {
@@ -141,7 +160,7 @@ function Products() {
             </Button>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{update ? 'Update Product' : 'Add Product'}</DialogTitle>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} enctype="multipart/form-data">
                     <DialogContent>
                         <FormControl fullWidth margin="dense">
                             <InputLabel id="category_id-label">Select Category</InputLabel>
@@ -242,6 +261,24 @@ function Products() {
                             error={errors.stock && touched.stock}
                             helperText={errors.stock && touched.stock ? errors.stock : ''}
                         />
+                        <input
+                            id="product_img"
+                            name="product_img"
+                            label="product_img"
+                            type="file"
+                            fullWidth
+                            variant="standard"
+                            onChange={(event) => {
+                                setFieldValue("product_img", event.currentTarget.files[0]);
+                            }}
+                            onBlur={handleBlur}
+
+                            sx={{ marginBottom: 2 }}
+                        />
+                        <br></br><br></br>
+                        {errors.product_img && touched.product_img ? <span style={{ color: "red" }}>{errors.product_img}</span> : null}
+
+
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={handleClose}>Cancel</Button>
