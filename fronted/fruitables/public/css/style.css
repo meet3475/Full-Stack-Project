@@ -566,7 +566,14 @@
 }
 
 .productData {
-    width: 300px !important;
-    height: 400px !important;
+    width: 310px !important;
+    height: 430px !important;
     margin: 10px !important;
+    border: 2px solid #81C408;
+}
+
+.pro_Img {
+    width: 100% !important;
+    height: 180px !important;
+    padding: 20px !important;
 }

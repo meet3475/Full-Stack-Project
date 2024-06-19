@@ -3,7 +3,7 @@ const { uploadfiles } = require("../utils/cloundary");
 
 const listproducts = async (req, res) => {
     try {
-        const products = await  Products.find();
+        const products = await Products.find();
 
         if (!products || products.length === 0) {
             res.status(404).json({
@@ -24,7 +24,7 @@ const listproducts = async (req, res) => {
             message: "Intenal server error." + error.message
         })
     }
-} 
+}
 
 const getproducts = async (req, res) => {
     try {
@@ -58,7 +58,7 @@ const addproducts = async (req, res) => {
     try {
         console.log(req.body);
         console.log(req.file);
-        
+
         const fileResult = await uploadfiles(req.file.path, "Product");
         console.log(fileResult);
 
@@ -68,7 +68,7 @@ const addproducts = async (req, res) => {
                 public_id: fileResult.public_id,
                 url: fileResult.url
             }
-           
+
         });
         console.log(product);
 
@@ -123,10 +123,24 @@ const deleteproducts = async (req, res) => {
 }
 
 const updateproducts = async (req, res) => {
-    try {
-        console.log("acbd", req.params.product_id, req.body);
 
-        const product = await Products.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators:true});
+    console.log("acbd", req.params.product_id, req.body, req.file);
+
+    if (req.file) {
+        console.log("new image");
+
+        const fileResult = await uploadfiles(req.file.path, "Product");
+        console.log(fileResult);
+
+        const product = await Products.findByIdAndUpdate(req.params.product_id,
+            {
+                ...req.body,
+                product_img: {
+                    public_id: fileResult.public_id,
+                    url: fileResult.url
+                }
+            },
+            { new: true, runValidators: true });
         console.log(product);
 
         if (!product) {
@@ -142,18 +156,73 @@ const updateproducts = async (req, res) => {
             data: product
         })
 
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Intenal server error." + error.message
+
+    } else {
+        console.log("old image");
+
+        const product = await Products.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators: true });
+        console.log(product);
+
+        if (!product) {
+            res.status(400).json({
+                success: false,
+                message: "Product not Update"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Product Update sucessfully",
+            data: product
         })
+
     }
+
+
+
+    // try {
+    //     console.log("acbd", req.params.product_id, req.body, req.file);
+
+    //     // const updateData = { ...req.body };
+
+    //     // if (req.file) {
+    //     //     const fileResult = await uploadfiles(req.file.path, "Product");
+    //     //     updateData.product_img = {
+    //     //         public_id: fileResult.public_id,
+    //     //         url: fileResult.url
+    //     //     };
+    //     // }
+
+    //     const product = await Products.findByIdAndUpdate(req.params.product_id, req.body, { new: true, runValidators:true});
+    //     console.log(product);
+
+
+
+    //     if (!product) {
+    //         res.status(400).json({
+    //             success: false,
+    //             message: "Product not Update"
+    //         })
+    //     }
+
+    //     res.status(200).json({
+    //         success: true,
+    //         message: "Product Update sucessfully",
+    //         data: product
+    //     })
+
+    // } catch (error) {
+    //     res.status(500).json({
+    //         success: false,
+    //         message: "Intenal server error." + error.message
+    //     })
+    // }
 }
 
 module.exports = {
-  listproducts,
-  getproducts,
-  addproducts,
-  deleteproducts,
-  updateproducts
+    listproducts,
+    getproducts,
+    addproducts,
+    deleteproducts,
+    updateproducts
 }

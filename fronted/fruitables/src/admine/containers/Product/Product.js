@@ -110,12 +110,23 @@ function Products() {
         product_img: mixed()
             .required("Please select an image")
             .test("fileSize", "The file is too large", (value) => {
-                return value && value.size <= 2 * 1024 * 1024; // 2MB
+                console.log(value);
+                if (value.size) {
+                    return value && value.size <= 2 * 1024 * 1024; // 2MB
+                }
+              
+                return true
             })
             .test("fileType", "Unsupported File Format", (value) => {
-                return (
-                    value && ["image/jpeg", "image/png", "image/gif"].includes(value.type)
-                );
+
+                if (value.type) {
+                    return (
+                        value && ["image/jpg", "image/jpeg", "image/png", "image/gif"].includes(value.type)
+                    );
+                }
+
+                return true
+                
             }),
     });
 
@@ -155,6 +166,7 @@ function Products() {
 
     const filteredSubcategories = subcategories.filter(subcategory => subcategory.category_id === values.category_id);
 
+    console.log(values);
     return (
         <>
             <Button variant="outlined" onClick={handleClickOpen}>
@@ -277,6 +289,10 @@ function Products() {
 
                             sx={{ marginBottom: 2 }}
                         />
+                        {
+                            values.product_img &&
+                                <img src={values.product_img.url ? values.product_img.url : URL.createObjectURL(values.product_img)} width="50" height="50" />
+                        }
                         <br></br><br></br>
                         {errors.product_img && touched.product_img ? <span style={{ color: "red" }}>{errors.product_img}</span> : null}
 

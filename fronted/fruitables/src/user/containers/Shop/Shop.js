@@ -289,7 +289,7 @@ function Shop(props) {
                       filteredProducts.map((v) => (
                         <div className="rounded position-relative fruite-item productData">
                               <div className="fruite-img">
-                                <img src={v.product_img.url} className="img-fluid  rounded-top" alt />
+                                <img src={v.product_img.url} className="img-fluid  rounded-top pro_Img" alt />
                               </div>
 
                               <div className="p-4">
@@ -298,6 +298,13 @@ function Shop(props) {
                                 <p>{v.stock} / Pcs.</p>
                                 <div className="d-flex justify-content-between flex-lg-wrap">
                                   <p className="text-dark fs-5 fw-bold mb-0">${v.price} / kg</p>
+                                  <Link
+                                    onClick={() => handleAddToCart(v.id)} 
+                                    className="btn border border-secondary rounded-pill px-3 text-primary"
+                                  >
+                                    <i className="fa fa-shopping-bag me-2 text-primary" />
+                                    Add to cart
+                                  </Link>
                                 </div>
                                
                               </div>
