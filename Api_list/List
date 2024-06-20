@@ -1,0 +1,331 @@
+1. Count the total number of active users.
+
+[
+    {
+    $match: {
+            "isActive": true
+        }
+    },
+    {
+    $count: 'NoOfActiveUsers'
+    }
+]
+
+
+{
+    "NoOfActiveUsers": 6
+}
+--------------------------------------------------------------------------------------------------
+2. Find the average age of male and female.
+
+[
+    {
+    $group: {
+      _id: "$gender",
+            "AveAge": {
+        $avg : "$age"
+            }
+        }
+    }
+]
+
+
+{
+    "_id": "Male",
+    "AveAge": 28.8
+}
+{
+    "_id": "Female",
+    "AveAge": 28.2
+}
+
+--------------------------------------------------------------------------------------------------
+3. Give the total number of posts by active users.
+
+[
+    {
+   $match: {
+            "isActive": true
+        }
+    },
+    {
+    $unwind: {
+      path: "$posts",
+        }
+    },
+    {
+    $group: {
+      _id: "$_id",
+            "NoOfPost": {
+       $sum : 1
+            }
+        }
+    }
+]
+
+{
+    "_id": 10,
+    "NoOfPost": 2
+}
+{
+    "_id": 1,
+    "NoOfPost": 2
+}
+{
+    "_id": 6,
+    "NoOfPost": 2
+}
+{
+    "_id": 8,
+    "NoOfPost": 2
+}
+{
+    "_id": 4,
+    "NoOfPost": 2
+}
+{
+    "_id": 2,
+    "NoOfPost": 2
+}
+
+--------------------------------------------------------------------------------------------------
+4. Count the total number of comments.
+[
+    {
+      $unwind: {
+        path: "$posts",
+        }
+    },
+    {
+      $unwind: {
+        path: "$posts.comments",
+        }
+    },
+    {
+      $group: {
+        _id: "$_id",
+            "NoOfComment": {
+         $sum : 1
+            }
+        }
+    },
+]
+
+
+[
+    {
+      $unwind: {
+        path: "$posts",
+      }
+    },
+    {
+      $project: {
+        "comm" : {
+          $size : "$posts.comments"
+        }
+      }
+    },
+    {
+      $group: {
+        _id: "$_id",
+       TotalComment: {
+         $sum: "$comm"
+        }
+      }
+    }
+  ]
+
+
+  {
+    "_id": 1,
+    "NoOfComment": 3
+}
+  {
+    "_id": 10,
+    "NoOfComment": 3
+}
+  {
+    "_id": 4,
+    "NoOfComment": 3
+}
+  {
+    "_id": 3,
+    "NoOfComment": 2
+}
+  {
+    "_id": 5,
+    "NoOfComment": 2
+}
+  {
+    "_id": 2,
+    "NoOfComment": 3
+}
+  {
+    "_id": 7,
+    "NoOfComment": 2
+}
+  {
+    "_id": 8,
+    "NoOfComment": 3
+}
+  {
+    "_id": 6,
+    "NoOfComment": 2
+}
+  {
+    "_id": 9,
+    "NoOfComment": 3
+}
+
+
+  [
+    {
+      $unwind: {
+        path: "$posts",
+        }
+    },
+    {
+      $unwind: {
+        path: "$posts.comments",
+        }
+    },
+    {
+     $count: 'noOfComments'
+    }
+]
+
+
+
+[
+    {
+      $unwind: {
+        path: "$posts",
+      }
+    },
+    {
+      $project: {
+        "comm" : {
+          $size : "$posts.comments"
+        }
+      }
+    },
+    {
+      $group: {
+        _id: null,
+       TotalComment: {
+         $sum: "$comm"
+        }
+      }
+    }
+  ]
+
+
+{
+    "noOfComments": 26
+}
+--------------------------------------------------------------------------------------------------
+5. List users and their total likes.
+[
+    {
+      $unwind: {
+        path: "$posts",
+        }
+    },
+    {
+     $group: {
+       _id: "$_id",
+            "NoOflikes": {
+         $sum: "$posts.likes"
+            }
+        }
+    }
+]
+
+  
+{
+    "_id": 1,
+    "NoOflikes": 35
+}
+  {
+    "_id": 10,
+    "NoOflikes": 43
+}
+  {
+    "_id": 4,
+    "NoOflikes": 42
+}
+  {
+    "_id": 3,
+    "NoOflikes": 40
+}
+  {
+    "_id": 5,
+    "NoOflikes": 32
+}
+  {
+    "_id": 2,
+    "NoOflikes": 35
+}
+  {
+    "_id": 7,
+    "NoOflikes": 38
+}
+  {
+    "_id": 8,
+    "NoOflikes": 43
+}
+  {
+    "_id": 6,
+    "NoOflikes": 47
+}
+  {
+    "_id": 9,
+    "NoOflikes": 32
+}
+
+
+[
+    {
+      $unwind: {
+        path: "$posts",
+        }
+    },
+    {
+     $group: {
+       _id: "$_id",
+            "name": {
+        $first : "$name"
+            },
+            "NoOflikes": {
+         $sum: "$posts.likes"
+            }
+        }
+    }
+]
+
+{
+    "_id": 1,
+    "name": "John Doe",
+    "NoOflikes": 35
+} //same as other
+--------------------------------------------------------------------------------------------------
+6. Find the user name with the maximum likes of posts.
+--------------------------------------------------------------------------------------------------
+7. Count the number of active and inactive users.
+--------------------------------------------------------------------------------------------------
+8. List the cities with the highest average age.
+--------------------------------------------------------------------------------------------------
+9. Count the number of users in each city.
+10. Count the number of users with JavaScript skills.
+11. Count the number of users with each skill.
+12. Find users who have posts with more than 15 likes and a specific skill.
+13. Find users with the highest total number of likes across all posts.
+14. Find users who have friends and count the number of friends.
+15. Find users who have at least one post with a specific comment and a specific skill.
+16. Count users who have skills javascript and react.
+17. count user who have second skills as React
+18. Categorise users by their city and gives their id and name.
+19. Give user data whose city name starts with "New".
+20. Add a "postCount" field representing the total number of posts for each user.
+21. Add a "friendNames" field with the names of friends for each user.
+22. Display posts data that have more than 1 comments.
