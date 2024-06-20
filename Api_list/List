@@ -308,18 +308,166 @@
     "name": "John Doe",
     "NoOflikes": 35
 } //same as other
+
 --------------------------------------------------------------------------------------------------
 6. Find the user name with the maximum likes of posts.
+
+[
+  {
+    $unwind: {
+      path: "$posts"
+    }
+  },
+  {
+    $group: {
+      _id: "$_id",
+      "TotalLike": {
+        $sum: "$posts.likes"
+      }
+    }
+  },
+  {
+    $sort: {
+      "TotalLike": -1
+    }
+  },
+  {
+    $limit: 1
+  }
+]
+
+
+{
+  "_id": 6,
+  "TotalLike": 47
+}
+
+
 --------------------------------------------------------------------------------------------------
 7. Count the number of active and inactive users.
+
+[
+  {
+    $group: {
+      _id: "$isActive",
+      "NoOfCount": {
+        $sum: 1
+      }
+    }
+  }
+]
+
+
+{
+  "_id": true,
+  "NoOfCount": 6
+}
+{
+  "_id": false,
+  "NoOfCount": 4
+}
 --------------------------------------------------------------------------------------------------
 8. List the cities with the highest average age.
+
+[
+  {
+    $group: {
+      _id: "$city",
+      "AvgAge": {
+        $avg: "$age"
+      }
+    }
+  },
+  {
+    $sort: {
+      "AvgAge": -1 
+    }
+  }
+]
+
+
+{
+  "_id": "Los Angeles",
+  "AvgAge": 31
+}
+{
+  "_id": "San Francisco",
+  "AvgAge": 28.666666666666668
+}
+{
+  "_id": "Portland",
+  "AvgAge": 27
+}
+{
+  "_id": "New York",
+  "AvgAge": 26
+}
+
+
 --------------------------------------------------------------------------------------------------
 9. Count the number of users in each city.
+
+[
+  {
+    $group: {
+      _id: "$city",
+     	"CountOfCity": {
+        $sum: 1
+      }
+    }
+  }
+]
+
+
+{
+  "_id": "Los Angeles",
+  "CountOfCity": 3
+}
+{
+  "_id": "Portland",
+  "CountOfCity": 2
+}
+{
+  "_id": "New York",
+  "CountOfCity": 2
+}
+{
+  "_id": "San Francisco",
+  "CountOfCity": 3
+}
+
+
+--------------------------------------------------------------------------------------------------
+
 10. Count the number of users with JavaScript skills.
+
+[
+  {
+    $match: {
+    	"skills" : "JavaScript"
+    }
+  },
+  {
+    $count: 'NoOfJavascript'
+  }
+]
+
+{
+  "NoOfJavascript": 6
+}
+
+--------------------------------------------------------------------------------------------------
+
 11. Count the number of users with each skill.
+
+--------------------------------------------------------------------------------------------------
+
 12. Find users who have posts with more than 15 likes and a specific skill.
+--------------------------------------------------------------------------------------------------
+
 13. Find users with the highest total number of likes across all posts.
+--------------------------------------------------------------------------------------------------
+
 14. Find users who have friends and count the number of friends.
 15. Find users who have at least one post with a specific comment and a specific skill.
 16. Count users who have skills javascript and react.
