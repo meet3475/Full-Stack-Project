@@ -775,6 +775,24 @@
   "NoOfReactAndJavascript": 4
 }
 
+
+
+[
+  {
+    $match: {
+      skills : {
+        $all : ["JavaScript", "React"]
+      }
+    }
+  },
+  {
+    $count: 'NoOfUser'
+  }
+]
+
+{
+  "NoOfUser": 4
+}
 --------------------------------------------------------------------------------------------------
 17. count user who have second skills as React
 
@@ -797,6 +815,23 @@
 
 {
   "NoOfSecondSkillReact": 4
+}
+
+
+
+[
+  {
+    $match: {
+      "skills.1" : "React"
+    }
+  },
+  {
+    $count: 'NoOfuser'
+  }
+]
+
+{
+  "NoOfuser": 4
 }
 
 --------------------------------------------------------------------------------------------------
@@ -890,6 +925,21 @@
   ]
 }
 
+
+[
+  {
+    $group: {
+      _id: "$city",
+      "User": {
+        $push: {"id" : "$_id", "name" : "$name"}
+      }
+    }
+  }
+]
+
+% same as upar nu output
+
+
 --------------------------------------------------------------------------------------------------
 19. Give user data whose city name starts with "New".
 
@@ -936,6 +986,17 @@
   "isActive": true
 }
 % as it is jena city ma New start thato hase e j data batavase... [1, 3, 11, 12]
+
+
+
+[
+  {
+    $match: {
+      "city" : /^New[a-zA-Z ]{2,30}$/
+    }
+  }
+]
+% same as upar nu output
 
 --------------------------------------------------------------------------------------------------
 20. Add a "postCount" field representing the total number of posts for each user.
@@ -1001,6 +1062,22 @@
   "postCount": 2
 }
 
+
+[
+  {
+    $addFields: {
+      "postCount": {$size: "$posts"}
+    }
+  },
+  {
+    $project: {
+      "name" : 1,
+      "postCount" : 1
+    }
+  }
+]
+
+% same as upar nu output
 --------------------------------------------------------------------------------------------------
 21. Add a "friendNames" field with the names of friends for each user.
 
@@ -1027,6 +1104,27 @@
   "friendNames": []
 }
 % as it is baki badha ma friendNames field add thay jase..
+
+
+
+[
+  {
+    $lookup: {
+      from: "users",
+      localField: "friends",
+      foreignField: "_id",
+      as: "friendsName"
+    }
+  },
+  {
+    $project: {
+      "name": 1,
+      "friendsName.name": 1
+    }
+  }
+]
+
+% same as upar nu output
 
 --------------------------------------------------------------------------------------------------
 22. Display posts data that have more than 1 comments.
@@ -1148,4 +1246,72 @@
   "CountComment": 2
 }
 
+
+
+
+[
+  {
+    $unwind: {
+      path: "$posts",
+    }
+  },
+  {
+    $addFields: {
+      "UserComment": {$size : "$posts.comments"}
+    }
+  },
+  {
+    $match: {
+       "UserComment" : {$gt: 1}
+    }
+  },
+  {
+    $project: {
+      	name : 1,
+      	"UserComment": 1
+    }
+  }
+]
+
+
+{
+  "_id": 2,
+  "name": "Alice Johnson",
+  "UserComment": 2
+}
+{
+  "_id": 1,
+  "name": "John Doe",
+  "UserComment": 2
+}
+{
+  "_id": 8,
+  "name": "Hannah Robinson",
+  "UserComment": 2
+}
+{
+  "_id": 9,
+  "name": "Isaac Moore",
+  "UserComment": 2
+}
+{
+  "_id": 4,
+  "name": "Diana Brown",
+  "UserComment": 2
+}
+{
+  "_id": 10,
+  "name": "Jasmine Hill",
+  "UserComment": 2
+}
+{
+  "_id": 11,
+  "name": "John Doe",
+  "UserComment": 2
+}
+{
+  "_id": 12,
+  "name": "John Doe",
+  "UserComment": 2
+}
 --------------------------------------------------------------------------------------------------
