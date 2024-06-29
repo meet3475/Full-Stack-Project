@@ -53,6 +53,82 @@ const getcategory = async (req, res) => {
     }
 }
 
+
+const countActive = async (req, res) => {
+
+    const categories = await Categories.aggregate([
+        {
+            $match: {
+                "isActive": true
+            }
+        },
+        {
+            $count: 'NoOfActiveCategory'
+        }
+    ])
+
+    res.status(200).json({
+        success: true,
+        message: "Category get  succesfully",
+        data: categories
+    })
+
+    console.log(categories);
+
+}
+
+
+const mostProducts = async (req, res) => {
+    const categories = await Categories.aggregate([
+
+        {
+            $lookup: {
+                from: "products",
+                localField: "_id",
+                foreignField: "category_id",
+                as: "product"
+            }
+        },
+        {
+            $match: {
+                product: { $ne: [] }
+            }
+        },
+        {
+            $unwind: {
+                path: "$product"
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                "name": { $first: "$category_name" },
+                "ToatalProduct": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $sort: {
+                "ToatalProduct": -1
+            }
+        },
+        {
+            $limit: 1
+        }
+
+    ])
+
+    res.status(200).json({
+        success: true,
+        message: "Category get  succesfully",
+        data: categories
+    })
+
+    console.log(categories);
+
+}
+
 const addcategory = async (req, res) => {
     try {
         console.log(req.body);
@@ -113,8 +189,8 @@ const deletecategory = async (req, res) => {
 const updatecategory = async (req, res) => {
     try {
         console.log("acbd", req.params.category_id, req.body);
-        
-        const category = await Categories.findByIdAndUpdate(req.params.category_id, req.body, {new:true, runValidators:true});
+
+        const category = await Categories.findByIdAndUpdate(req.params.category_id, req.body, { new: true, runValidators: true });
         console.log(category);
 
         if (!category) {
@@ -141,6 +217,8 @@ const updatecategory = async (req, res) => {
 module.exports = {
     listcategories,
     getcategory,
+    countActive,
+    mostProducts,
     addcategory,
     deletecategory,
     updatecategory

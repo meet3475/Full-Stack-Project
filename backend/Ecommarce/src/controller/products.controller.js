@@ -26,6 +26,81 @@ const listproducts = async (req, res) => {
     }
 }
 
+const topRate = async (req, res) => {
+
+    const products = await Products.aggregate([
+        {
+            $lookup: {
+              from: "reviews",
+              localField: "_id",
+              foreignField: "product_id",
+              as: "review"
+            }
+          },
+          {
+           $unwind: {
+             path: "$review"
+           } 
+          },
+          {
+            $group: {
+              _id: "$_id",
+              "product_name" : {$first: "$name"},
+              "Totalrating": {
+                $sum: "$review.rating"
+              }
+            }
+          },
+          {
+            $sort: {
+              "Totalrating": -1
+            }
+          },
+          {
+            $limit: 1
+          }
+    ])
+
+    res.status(200).json({
+        success: true,
+        message: "Products get  succesfully",
+        data: products
+    })
+
+    console.log(products);
+
+}
+
+const outofstock = async (req, res) => {
+
+    const products = await Products.aggregate([
+    
+            {
+              $lookup: {
+                from: "variants",
+                localField: "_id",
+                foreignField: "product_id",
+                as: "variant"
+              }
+            },
+            {
+              $match: {
+                "variant" : {$eq : []}
+              }
+            }
+          
+    ])
+
+    res.status(200).json({
+        success: true,
+        message: "Products get  succesfully",
+        data: products
+    })
+
+    console.log(products);
+
+}
+
 const getproducts = async (req, res) => {
     try {
         console.log(req.params.product_id);
@@ -221,6 +296,8 @@ const updateproducts = async (req, res) => {
 
 module.exports = {
     listproducts,
+    topRate,
+    outofstock,
     getproducts,
     addproducts,
     deleteproducts,

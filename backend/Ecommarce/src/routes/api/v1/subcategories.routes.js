@@ -10,6 +10,16 @@ routes.get(
 )
 
 routes.get(
+    '/inactive', 
+    subcategoriesController.countInactive
+)
+
+routes.get(
+    '/most-products', 
+    subcategoriesController.mostProducts
+)
+
+routes.get(
     '/bycategory-list-subcategories/:category_id', 
     subcategoriesController.getcategorybysubcategory
 )

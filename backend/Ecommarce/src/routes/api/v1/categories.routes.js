@@ -15,6 +15,16 @@ routes.get(
     categoriesController.getcategory
 )
 
+routes.get(
+    '/count-active',
+    categoriesController.countActive
+)
+
+routes.get(
+    '/most-products',
+    categoriesController.mostProducts
+)
+
 routes.post(
     '/add-categories', 
     categoriesController.addcategory

@@ -25,11 +25,85 @@ const listsubcategories = async (req, res) => {
     }
 }
 
+const countInactive = async (req, res) => {
+
+    const subcategories = await Subcategories.aggregate([
+        {
+            $match: {
+                "isActive": false
+            }
+        },
+        {
+            $count: 'NoOfInActiveSubcategory'
+        }
+    ])
+
+    res.status(200).json({
+        success: true,
+        message: "Subcategories get  succesfully",
+        data: subcategories
+    })
+
+    console.log(subcategories);
+
+}
+
+const mostProducts = async (req, res) => {
+
+    const subcategories = await Subcategories.aggregate([
+        
+        {
+            $lookup: {
+                from: "products",
+                localField: "_id",
+                foreignField: "subcategory_id",
+                as: "product"
+            }
+        },
+        {
+            $match: {
+                product: { $ne: [] }
+            }
+        },
+        {
+            $unwind: {
+                path: "$product"
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                "name": { $first: "$subcategory_name" },
+                "ToatalProduct": {
+                    $sum: 1
+                }
+            }
+        },
+        {
+            $sort: {
+                "ToatalProduct": -1
+            }
+        },
+        {
+            $limit: 4
+        }
+    ])
+
+    res.status(200).json({
+        success: true,
+        message: "Subcategories get  succesfully",
+        data: subcategories
+    })
+
+    console.log(subcategories);
+
+}
+
 const getcategorybysubcategory = async (req, res) => {
     try {
         console.log(req.params.category_id);
 
-        const subcategories = await Subcategories.find({category_id: req.params.category_id});
+        const subcategories = await Subcategories.find({ category_id: req.params.category_id });
         console.log(subcategories);
 
         if (!subcategories || subcategories.length === 0) {
@@ -168,6 +242,8 @@ const updatesubcategory = async (req, res) => {
 
 module.exports = {
     listsubcategories,
+    countInactive,
+    mostProducts,
     getcategorybysubcategory,
     getsubcategory,
     addsubcategory,

@@ -11,6 +11,16 @@ routes.get(
 )
 
 routes.get(
+    '/top-rated',
+    productsController.topRate
+)
+
+routes.get(
+    '/out-of-stock',
+    productsController.outofstock
+)
+
+routes.get(
     '/get-products/:product_id', 
     productsController.getproducts
 )
