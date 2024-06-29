@@ -177,25 +177,6 @@
     "NoOfComment": 3
 }
 
-
-  [
-    {
-      $unwind: {
-        path: "$posts",
-        }
-    },
-    {
-      $unwind: {
-        path: "$posts.comments",
-        }
-    },
-    {
-     $count: 'noOfComments'
-    }
-]
-
-
-
 [
     {
       $unwind: {
