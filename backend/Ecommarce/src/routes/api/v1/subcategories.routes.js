@@ -10,13 +10,28 @@ routes.get(
 )
 
 routes.get(
-    '/inactive', 
-    subcategoriesController.countInactive
+    '/parent-of-subcategory/:category_id', 
+    subcategoriesController.parentOfSubcategory
+)
+
+routes.get(
+    '/count-active', 
+    subcategoriesController.countActive
 )
 
 routes.get(
     '/most-products', 
     subcategoriesController.mostProducts
+)
+
+routes.get(
+    '/inactive', 
+    subcategoriesController.countInactive
+)
+
+routes.get(
+    '/count-products', 
+    subcategoriesController.countProducts
 )
 
 routes.get(

@@ -11,13 +11,33 @@ routes.get(
 )
 
 routes.get(
+    '/search/:name',
+    productsController.searchName
+)
+
+routes.get(
+    '/list-category/:category_id',
+    productsController.productsByCategory
+)
+
+routes.get(
+    '/list-subcategory/:subcategory_id',
+    productsController.productsBySubcategory
+)
+
+routes.get(
     '/top-rated',
     productsController.topRate
 )
 
 routes.get(
-    '/out-of-stock',
-    productsController.outofstock
+    '/new-arrivals',
+    productsController.newArrivals
+)
+
+routes.get(
+    '/count-categories',
+    productsController.countCategories
 )
 
 routes.get(

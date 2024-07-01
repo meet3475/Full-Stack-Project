@@ -25,6 +25,26 @@ routes.get(
     categoriesController.mostProducts
 )
 
+routes.get(
+    '/total-products',
+    categoriesController.totalProducts
+)
+
+routes.get(
+    '/inactive',
+    categoriesController.listInactive
+)
+
+routes.get(
+    '/count-subcategories',
+    categoriesController.countSubcategories
+)
+
+routes.get(
+    '/category-subcategory/:category_id',
+    categoriesController.specificCategory
+)
+
 routes.post(
     '/add-categories', 
     categoriesController.addcategory
