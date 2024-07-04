@@ -10,6 +10,7 @@ import Coupon from '../../admine/containers/Coupon/Coupon';
 import Checkout from '../../admine/containers/Checkout/Checkout';
 import Contact from '../../admine/containers/Contact/Contact';
 import Subcatagory from '../../admine/containers/Subcatagory/Subcatagory';
+import Variant from '../../admine/containers/Variant/Variant';
 
 
 function AdmineRoute(props) {
@@ -20,7 +21,8 @@ function AdmineRoute(props) {
                     <Route exact path="/product" element={<Product />} />
                     <Route exact path="/subcatagory" element={<Subcatagory />} />
                     <Route exact path="/review" element={<Review />} />
-                    <Route exact path="/catagory" element={<Catagory />} />
+                    <Route exact path="/variant" element={<Variant />} />
+                    <Route exact path="/catagory" element={<Catagory />}/>
                     <Route exact path="/facilities" element={<Facilities />} />
                     <Route exact path="/counter" element={<Counter />} />
                     <Route exact path="/coupon" element={<Coupon />} />

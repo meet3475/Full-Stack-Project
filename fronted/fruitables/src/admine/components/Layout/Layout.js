@@ -27,6 +27,7 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import DiscountIcon from '@mui/icons-material/Discount';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import FactCheckIcon from '@mui/icons-material/FactCheck';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const drawerWidth = 240;
 
@@ -99,6 +100,7 @@ let adminlink = [
   { title: "Catagory", icon: < CategoryIcon />, to: "/admine/catagory" },
   { title: "Subcatagory", icon: <FactCheckIcon  />, to: "/admine/subcatagory" },
   { title: "Product", icon: <AppleIcon />, to: "/admine/product" },
+  { title: "Variant", icon: <FormatListBulletedIcon />, to: "/admine/variant" },
   { title: "Facilities", icon: <DnsIcon />, to: "/admine/facilities" },
   { title: "Counter", icon: <CalculateIcon />, to: "/admine/counter" },
   { title: "Review", icon: <RateReviewIcon />, to: "/admine/review" },
