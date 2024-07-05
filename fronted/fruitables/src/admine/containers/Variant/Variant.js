@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
     Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle,
-    Backdrop, CircularProgress, FormControl, InputLabel, MenuItem, Select, IconButton
+    FormControl, InputLabel, MenuItem, Select, IconButton
 } from '@mui/material';
 import { useFormik } from 'formik';
 import { object, string, boolean } from 'yup';
@@ -9,32 +9,28 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid } from '@mui/x-data-grid';
 import { useDispatch, useSelector } from 'react-redux';
-import { addVariant, deleteVariant, editVariant, getVariant } from '../../../redux/action/variant.action';
 import { getData } from '../../../redux/action/category.action';
 import { getSubData } from '../../../redux/slice/subcategory.slice';
 import { getProduct } from '../../../redux/action/product.action';
+import { addVariant, deleteVariant, editVariant, getVariant } from '../../../redux/action/variant.action';
 
-function Variants(props) {
+
+function Variants() {
     const [open, setOpen] = useState(false);
     const [update, setUpdate] = useState(false);
     const [dynamicFields, setDynamicFields] = useState([]);
     const dispatch = useDispatch();
 
     const product = useSelector((state) => state.product.product || []);
-    // console.log(product);
     const categories = useSelector((state) => state.categories.categories || []);
-    // console.log(categories, "categoriescategoriescategoriescategories");
     const subcategories = useSelector((state) => state.subcategories.subcategories || []);
-    // console.log(subcategories);
-    const variants = useSelector((state) => state?.variant?.variant || []);
-    console.log(variants);
-
+    const variants = useSelector((state) => state.variant.variant || []);
 
     useEffect(() => {
         dispatch(getVariant());
         dispatch(getData());
-        dispatch(getSubData())
-        dispatch(getProduct())
+        dispatch(getSubData());
+        dispatch(getProduct());
     }, [dispatch]);
 
     const handleClickOpen = () => {
@@ -52,7 +48,7 @@ function Variants(props) {
     const handleEdit = (data) => {
         formik.setValues({
             ...data,
-            additionalFields: Object.entries(data.attributes).map(([key, value]) => ({ key, value })),
+            additionalFields: Object.entries(data.attributes || {}).map(([key, value]) => ({ key, value })),
         });
         setOpen(true);
         setUpdate(true);
@@ -67,9 +63,9 @@ function Variants(props) {
         category_id: string().required('Category is required'),
         subcategory_id: string().required('Subcategory is required'),
         product_id: string().required('Product is required'),
-        price: string().required('please entre price'),
-        stock: string().required('please entre stock'),
-        discount: string().required('please entre discount'),
+        price: string().required('Please enter price'),
+        stock: string().required('Please enter stock'),
+        discount: string().required('Please enter discount'),
         is_active: boolean(),
     });
 
@@ -86,17 +82,20 @@ function Variants(props) {
         },
         validationSchema: variantSchema,
         onSubmit: (values, { resetForm }) => {
-            const attributes = values.additionalFields.reduce((acc, field) => {
-                acc[field.key] = field.value;
-                return acc;
-            }, {});
+            const attributes = {
+                ...values.additionalFields.reduce((acc, field) => {
+                    acc[field.key] = field.value;
+                    return acc;
+                }, {}),
+                price: values.price,
+                stock: values.stock,
+                discount: values.discount,
+            };
 
             const variantData = {
                 ...values,
                 attributes,
             };
-
-            console.log(variantData);
 
             if (update) {
                 dispatch(editVariant(variantData));
@@ -132,37 +131,33 @@ function Variants(props) {
 
     const columns = [
         {
-            field: 'category_id', headerName: 'Category', width: 130,
+            field: 'category_id', headerName: 'Category', width: 150,
             renderCell: (params) => {
                 const category = categories.find((v) => v._id === params.row.category_id);
                 return category ? category.name : '';
             }
         },
         {
-            field: 'subcategory_id', headerName: 'Subcategory', width: 130,
+            field: 'subcategory_id', headerName: 'SubCategory', width: 150,
             renderCell: (params) => {
                 const subcategory = subcategories.find((v) => v._id === params.row.subcategory_id);
                 return subcategory ? subcategory.name : '';
             }
         },
         {
-            field: 'product_id', headerName: 'Product', width: 130,
+            field: 'product_id', headerName: 'Product', width: 150,
             renderCell: (params) => {
-                const productData = product.find((v) => v._id === params.row.product_id);
-                return productData ? productData.name : '';
+                const products = product.find((v) => v._id === params.row.product_id);
+                return products ? products.name : '';
             }
         },
         {
-            field: 'attributes', headerName: 'Attributes', width: 250,
+            field: 'attributes', headerName: 'Attributes', width: 400,
             renderCell: (params) => {
                 const attributes = params.row.attributes;
-                return attributes ? Object.entries(attributes).map(([key, value]) => `${key}: ${value}`).join(', ') : '';
+                return attributes ? Object.entries(attributes).map(([key, value]) =>` ${key}: ${value}`).join(', ') : '';
             }
         },
-        { field: 'price', headerName: 'price', width: 130, },
-        { field: 'stock', headerName: 'stock', width: 130, },
-        { field: 'discount', headerName: 'discount', width: 130, },
-
         {
             field: 'Action',
             headerName: 'Action',
@@ -293,16 +288,16 @@ function Variants(props) {
                                         </IconButton>
                                     </div>
                                 ))}
-                                <Button variant="outlined" onClick={addField} style={{ marginTop: "20px" }}>
+                                <Button variant="outlined" onClick={addField} style={{ marginTop: '20px' }}>
                                     Add Field
                                 </Button>
                             </div>
 
                             <TextField
                                 margin="dense"
-                                id="name"
+                                id="price"
                                 name="price"
-                                label="price"
+                                label="Price"
                                 type="number"
                                 fullWidth
                                 variant="standard"
@@ -310,13 +305,13 @@ function Variants(props) {
                                 onBlur={handleBlur}
                                 value={values.price}
                                 error={errors.price && touched.price ? true : false}
-                                helperText={errors.price && touched.price ? errors.price : ""}
+                                helperText={errors.price && touched.price ? errors.price : ''}
                             />
                             <TextField
                                 margin="dense"
-                                id="name"
+                                id="stock"
                                 name="stock"
-                                label="stock"
+                                label="Stock"
                                 type="text"
                                 fullWidth
                                 variant="standard"
@@ -324,13 +319,13 @@ function Variants(props) {
                                 onBlur={handleBlur}
                                 value={values.stock}
                                 error={errors.stock && touched.stock ? true : false}
-                                helperText={errors.stock && touched.stock ? errors.stock : ""}
+                                helperText={errors.stock && touched.stock ? errors.stock : ''}
                             />
                             <TextField
                                 margin="dense"
-                                id="name"
+                                id="discount"
                                 name="discount"
-                                label="discount"
+                                label="Discount"
                                 type="text"
                                 fullWidth
                                 variant="standard"
@@ -338,9 +333,9 @@ function Variants(props) {
                                 onBlur={handleBlur}
                                 value={values.discount}
                                 error={errors.discount && touched.discount ? true : false}
-                                helperText={errors.discount && touched.discount ? errors.discount : ""}
+                                helperText={errors.discount && touched.discount ? errors.discount : ''}
                             />
-                            
+
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose} color="secondary">

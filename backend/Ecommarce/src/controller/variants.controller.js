@@ -80,36 +80,30 @@ const addVariant = async (req, res) => {
 }
 
 const updateVariant = async (req, res) => {
-    console.log("jdghdgh", req.body);
     try {
         const updatedVariant = await Variants.findByIdAndUpdate(
             req.params.variant_id,
             req.body,
             { new: true, runValidators: true }
         );
-
-        console.log(updatedVariant);
-
-       
-            if (!updatedVariant) {
-                res.status(400).json({
-                    success: false,
-                    message: "Bad request",
-                });
-
-            };
-            res.status(201).json({
-                success: true,
-                message: "Variant updated successfully",
-                data: updatedVariant,
+        if (!updatedVariant) {
+            return res.status(400).json({
+                success: false,
+                message: "Bad request",
             });
+        }
+        res.status(200).json({
+            success: true,
+            message: "Variant updated successfully",
+            data: updatedVariant,
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: "Internal server error: " + error.message,
         });
     }
-}
+};
 
 const deleteVariant = async (req, res) => {
     try {
