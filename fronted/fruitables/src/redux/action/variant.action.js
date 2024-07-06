@@ -6,7 +6,7 @@ export const getVariant = () => async (dispatch) => {
         const response = await axios.get("http://localhost:8000/api/v1/variants/list-variant");
         dispatch({ type: GET_VARIANTS, payload: response.data.data });
     } catch (error) {
-        console.error("Error fetching variants:", error);
+       console.log("Error ger variant:");
     }
 };
 
@@ -14,12 +14,12 @@ export const addVariant = (data) => async (dispatch) => {
     try {
         const response = await axios.post("http://localhost:8000/api/v1/variants/add-variant", data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "multipart/form-data",
+            },
         });
         dispatch({ type: ADD_VARIANTS, payload: response.data.data });
     } catch (error) {
-        console.error("Error adding variant:", error);
+        console.log("Error adding variant:");
     }
 };
 
@@ -28,7 +28,7 @@ export const deleteVariant = (_id) => async (dispatch) => {
         await axios.delete(`http://localhost:8000/api/v1/variants/delete-variant/${_id}`);
         dispatch({ type: DELETE_VARIANTS, payload: _id });
     } catch (error) {
-        console.error("Error deleting variant:", error);
+        console.log("Error deleting variant:");
     }
 };
 
@@ -36,12 +36,12 @@ export const editVariant = (data) => async (dispatch) => {
     try {
         const response = await axios.put(`http://localhost:8000/api/v1/variants/update-variant/${data._id}`, data, {
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "multipart/form-data",
+            },
         });
         dispatch({ type: EDIT_VARIANTS, payload: response.data.data });
     } catch (error) {
-        console.error("Error editing variant:", error);
+        console.log("Error editing variant:");
     }
 };
 

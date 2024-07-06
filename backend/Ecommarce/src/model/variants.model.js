@@ -28,10 +28,10 @@ const variantSchema = new mongoose.Schema(
             type: Number
         },
         attributes: {},
-        img: {
-            type:{
-                public_id:String,
-                url:String
+        variant_img: {
+            type: {
+                public_id: String,
+                url: String
             }
         },
         isActive: {

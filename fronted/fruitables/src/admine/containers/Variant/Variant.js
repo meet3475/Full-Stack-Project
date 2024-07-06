@@ -4,7 +4,7 @@ import {
     FormControl, InputLabel, MenuItem, Select, IconButton
 } from '@mui/material';
 import { useFormik } from 'formik';
-import { object, string, boolean } from 'yup';
+import { object, string, boolean, mixed } from 'yup';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { DataGrid } from '@mui/x-data-grid';
@@ -67,6 +67,27 @@ function Variants() {
         stock: string().required('Please enter stock'),
         discount: string().required('Please enter discount'),
         is_active: boolean(),
+        variant_img: mixed()
+            .required("Please select an image")
+            .test("fileSize", "The file is too large", (value) => {
+                console.log(value);
+                if (value.size) {
+                    return value && value.size <= 2 * 1024 * 1024; // 2MB
+                }
+
+                return true
+            })
+            .test("fileType", "Unsupported File Format", (value) => {
+
+                if (value.type) {
+                    return (
+                        value && ["image/jpg", "image/jpeg", "image/png", "image/gif"].includes(value.type)
+                    );
+                }
+
+                return true
+
+            })
     });
 
     const formik = useFormik({
@@ -79,6 +100,7 @@ function Variants() {
             discount: '',
             additionalFields: [],
             is_active: true,
+            variant_img: ''
         },
         validationSchema: variantSchema,
         onSubmit: (values, { resetForm }) => {
@@ -87,9 +109,6 @@ function Variants() {
                     acc[field.key] = field.value;
                     return acc;
                 }, {}),
-                price: values.price,
-                stock: values.stock,
-                discount: values.discount,
             };
 
             const variantData = {
@@ -152,11 +171,26 @@ function Variants() {
             }
         },
         {
-            field: 'attributes', headerName: 'Attributes', width: 400,
+            field: 'attributes', headerName: 'Attributes', width: 200,
             renderCell: (params) => {
                 const attributes = params.row.attributes;
-                return attributes ? Object.entries(attributes).map(([key, value]) =>` ${key}: ${value}`).join(', ') : '';
+                return attributes ? Object.entries(attributes).map(([key, value]) => `${key}: ${value}`).join(', ') : '';
             }
+        },
+        { field: 'price', headerName: 'Price', width: 150 },
+        { field: 'stock', headerName: 'Stock', width: 150 },
+        { field: 'discount', headerName: 'Discount', width: 150 },
+        {
+            field: "variant_img",
+            headerName: "Image",
+            width: 150,
+            renderCell: ({ row }) => (
+                row.variant_img && row.variant_img.url ? (
+                    <img src={row.variant_img.url} width="50" height="50" />
+                ) : (
+                    <span>No Image</span>
+                )
+            ),
         },
         {
             field: 'Action',
@@ -335,6 +369,28 @@ function Variants() {
                                 error={errors.discount && touched.discount ? true : false}
                                 helperText={errors.discount && touched.discount ? errors.discount : ''}
                             />
+
+                            <input
+                                id="variant_img"
+                                name="variant_img"
+                                label="variant_img"
+                                type="file"
+                                fullWidth
+                                variant="standard"
+                                onChange={(event) => {
+                                    setFieldValue("variant_img", event.currentTarget.files[0]);
+                                }}
+                                onBlur={handleBlur}
+
+                                sx={{ marginBottom: 2 }}
+                            />
+                            {
+                                values.variant_img &&
+                                <img src={values.variant_img.url ? values.variant_img.url : URL.createObjectURL(values.variant_img)} width="50" height="50" />
+                            }
+                            <br></br><br></br>
+                            {errors.variant_img && touched.variant_img ? <span style={{ color: "red" }}>{errors.variant_img}</span> : null}
+
 
                         </DialogContent>
                         <DialogActions>

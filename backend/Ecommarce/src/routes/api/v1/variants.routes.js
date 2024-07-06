@@ -1,6 +1,6 @@
-const express = require('express')
-// const upload = require('../../../middlewar/upload')
-const { variantsController } = require('../../../controller')
+const express = require('express');
+const { variantsController } = require('../../../controller');
+const upload = require('../../../middlewar/upload');
 
 const routes = express.Router();
 
@@ -16,12 +16,13 @@ routes.get(
 
 routes.post(
     '/add-variant',
-    // upload.single('img'),
+    upload.single("variant_img"),
     variantsController.addVariant
 )
 
 routes.put(
     '/update-variant/:variant_id',
+    upload.single("variant_img"),
     variantsController.updateVariant
 )
 
