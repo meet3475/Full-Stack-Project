@@ -1,0 +1,153 @@
+1 Create Table
+CREATE TABLE customers (
+    id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    address TEXT,
+    mobile-no VARCHAR(255) NOT NULL
+)
+
+
+2 Insert Colum
+INSERT INTO customers
+( name, address, mobile_no)
+VALUES ('Vraj','Surat','87898765478')
+
+
+3 Update colum
+UPDATE customers
+SET address='mumbai', mobile_no='5678904321'
+WHERE id=1
+
+
+4 Delete colum
+DELETE FROM customers WHERE id=2
+
+5 
+(i)order table
+CREATE TABLE orders (
+	id INT(11) AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT(11) NOT NULL,
+    amount INT(11) NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES `customers` (id)
+ )
+
+
+(ii)insert
+ INSERT INTO orders (customer_id, amount, status) VALUES ('1', '3000', 'pending')
+ INSERT INTO orders (customer_id, amount, status) VALUES (3, 600, 'pending')
+
+(iii)update
+UPDATE orders 
+SET amount='788'
+WHERE id=1
+
+(iv)Delete
+DELETE FROM orders WHERE id=4
+
+
+6. salespeople
+CREATE TABLE salespeople (
+	snum INT(11) PRIMARY KEY,
+    sname VARCHAR(255) NOT NULL,
+    city VARCHAR(255) DEFAULT 'surat',
+    comm DECIMAL(5,2) 
+)
+
+INSERT INTO salespeople (snum, sname, city, comm) VALUES (1001, 'Peel', 'London', 0.12)
+INSERT INTO salespeople (snum, sname, city, comm) VALUES (1004, 'Motika', 'London', 0.11)
+INSERT INTO salespeople (snum, sname, city, comm) VALUES (1007, 'Rifkin', 'Barcelona', 0.15)
+INSERT INTO salespeople (snum, sname, city, comm) VALUES (1002, 'Serres', 'San Jose', 0.13);
+INSERT INTO salespeople (snum, sname, city, comm) VALUES (1003, 'Axelord', 'New York', 0.1);
+INSERT INTO salespeople (snum, sname, city, comm) VALUES (111, 'Amit', 'New York', 0.1);
+
+
+UPDATE salespeople
+SET city='surat'
+WHERE snum=111
+
+DELETE FROM salespeople WHERE snum=111
+
+
+7. customer
+CREATE TABLE customer (
+	cnum INT(11) PRIMARY KEY,
+    cname VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    rating INT(11) NOT NULL,
+    snum INT(11) NOT NULL,
+    FOREIGN KEY (snum) REFERENCES `salespeople` (snum)
+)
+
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (2002, 'Giovanne', 'Rome', 200, 1003);
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (2003, 'Liu San', 'Jose', 300, 1002);
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (2004, 'Grass', 'Berlin', 100, 1002);
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (2006, 'Clemens', 'London', 300, 1007);
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (2001, 'Hoffman', 'London', 100, 1001);
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (2007, 'Pereira', 'Rome', 100, 1004);
+INSERT INTO customer (cnum, cname, city, rating, snum) VALUES (111, 'meet', 'surat', 888, 1004)
+
+UPDATE customer
+SET city='vapi', rating='765'
+WHERE cnum=111
+
+DELETE FROM customer WHERE cnum=111
+
+
+
+8.order
+CREATE TABLE orders (
+	onum INT(11) PRIMARY KEY,
+    amt DECIMAL(5,2) NOT NULL,
+    odate VARCHAR(7) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+   	cnum INT(11) NOT NULL,
+    snum INT(11) NOT NULL,
+    FOREIGN KEY (cnum) REFERENCES `customer` (cnum),
+    FOREIGN KEY (snum) REFERENCES `salespeople` (snum)
+)
+
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3002, 1900.1, '10-MAR-94', 2007, 1003);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3009, 1713.23, '10-APR-94', 2002, 1003);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3003, 767.19, '10-MAR-94', 2001, 1001);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3005, 5160.45, '10-MAR-94', 2003, 1002);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3007, 75.75, '10-APR-94', 2004, 1002);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3008, 4723.95, '10-MAY-94', 2006, 1001);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3010, 1309.95, '10-JUN-94', 2004, 1002);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3011, 9891, '10-JUN-94', 2006, 1001);
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3012, 767.19, '10-MAR-94', 2001, 1001);
+
+
+UPDATE orders
+SET amt=18.96, odate='10-MAR-94', cnum=2002, snum=1002
+WHERE onum=3001;
+UPDATE orders
+SET amt=1900.1, odate='10-MAR-94', cnum=2007, snum=1003
+WHERE onum=3002;
+UPDATE orders
+SET amt=1713.23, odate='10-APR-94', cnum=2002, snum=1003
+WHERE onum=3009;
+UPDATE orders
+SET amt=767.19, odate='10-MAR-94', cnum=2001, snum=1001
+WHERE onum=3003;
+UPDATE orders
+SET amt=5160.45, odate='10-MAR-94', cnum=2003, snum=1002
+WHERE onum=3005;
+UPDATE orders
+SET amt=75.75, odate='10-APR-94', cnum=2004, snum=1002
+WHERE onum=3007;
+UPDATE orders
+SET amt=1713.23, odate='10-MAY-94', cnum=2006, snum=1001
+WHERE onum=3008;
+UPDATE orders
+SET amt=767.19, odate='10-JUN-94', cnum=2004, snum=1002
+WHERE onum=3010;
+UPDATE orders
+SET amt=9891, odate='10-JUN-94', cnum=2006, snum=1001
+WHERE onum=3011;
+UPDATE orders
+SET amt=767.19, odate='10-MAR-94', cnum=2001, snum=1001
+WHERE onum=3012;
+
+
+DELETE FROM orders WHERE onum=3012;
