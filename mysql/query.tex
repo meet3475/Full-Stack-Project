@@ -98,15 +98,15 @@ DELETE FROM customer WHERE cnum=111
 8.order
 CREATE TABLE orders (
 	onum INT(11) PRIMARY KEY,
-    amt DECIMAL(5,2) NOT NULL,
-    odate VARCHAR(7) NOT NULL,
-    city VARCHAR(255) NOT NULL,
+    amt DECIMAL(6,2) NOT NULL,
+    odate VARCHAR(255) NOT NULL,
    	cnum INT(11) NOT NULL,
     snum INT(11) NOT NULL,
     FOREIGN KEY (cnum) REFERENCES `customer` (cnum),
     FOREIGN KEY (snum) REFERENCES `salespeople` (snum)
 )
 
+INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3001, 1800.96, '10-MAR-94', 2002, 1002);
 INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3002, 1900.1, '10-MAR-94', 2007, 1003);
 INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3009, 1713.23, '10-APR-94', 2002, 1003);
 INSERT INTO orders (onum, amt, odate, cnum, snum) VALUES (3003, 767.19, '10-MAR-94', 2001, 1001);
@@ -137,10 +137,10 @@ UPDATE orders
 SET amt=75.75, odate='10-APR-94', cnum=2004, snum=1002
 WHERE onum=3007;
 UPDATE orders
-SET amt=1713.23, odate='10-MAY-94', cnum=2006, snum=1001
+SET amt=4723.95, odate='10-MAY-94', cnum=2006, snum=1001
 WHERE onum=3008;
 UPDATE orders
-SET amt=767.19, odate='10-JUN-94', cnum=2004, snum=1002
+SET amt=1309.95, odate='10-JUN-94', cnum=2004, snum=1002
 WHERE onum=3010;
 UPDATE orders
 SET amt=9891, odate='10-JUN-94', cnum=2006, snum=1001
@@ -151,3 +151,15 @@ WHERE onum=3012;
 
 
 DELETE FROM orders WHERE onum=3012;
+
+
+
+
+
+
+
+
+
+
+
+
