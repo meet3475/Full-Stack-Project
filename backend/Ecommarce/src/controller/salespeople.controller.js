@@ -26,9 +26,9 @@ const listsalespeople = async (req, res) => {
 const postsalespeople = async (req, res) => {
     try {
 
-        const { sname, city, comm } = req.body;
+        const { sname, city, comm, isActive } = req.body;
 
-        const salesPeople = await Salespeople.addSalespeople(sname, city, comm);
+        const salesPeople = await Salespeople.addSalespeople(sname, city, comm, isActive);
 
         console.log(salesPeople);
 
@@ -77,10 +77,9 @@ const updateSalespeople = async (req, res) => {
     try {
         const {snum} = req.params
 
-        const {sname, city, comm} = req.body
+        const {sname, city, comm, isActive} = req.body
 
-
-        const salesPeople = await Salespeople.updateSalespeople(snum, sname, city, comm);
+        const salesPeople = await Salespeople.updateSalespeople(snum, sname, city, comm, isActive);
 
         console.log(salesPeople);
 
@@ -99,6 +98,8 @@ const updateSalespeople = async (req, res) => {
         })
     }
 }
+
+
 
 module.exports = {
     listsalespeople,

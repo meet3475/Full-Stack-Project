@@ -13,7 +13,11 @@ export const getsalespeople = () => async (dispatch) => {
 
 export const addsalespeople = (data) => async (dispatch) => {
     try {
-        const response = await axios.post("http://localhost:8000/api/v1/salespeople/add-salespeople", data);
+        const response = await axios.post("http://localhost:8000/api/v1/salespeople/add-salespeople", data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         dispatch({ type: ADD_SALESPEOPLE, payload: response.data.data });
     } catch (error) {
         console.log("Error adding variant:");
@@ -33,17 +37,17 @@ export const deletesalespeople = (snum) => async (dispatch) => {
 export const editsalespeople = (data) => async (dispatch) => {
     console.log(data);
     try {
-         await axios.put(`http://localhost:8000/api/v1/salespeople/update-salespeople/${data.snum}`, data)
-        .then((response) => {
-            dispatch({ type: EDIT_SALESPEOPLE, payload: response.data })
-        })
-        .catch((error) => {
-            console.log("Error editing variant:");
-            
-        })
+        await axios.put(`http://localhost:8000/api/v1/salespeople/update-salespeople/${data.snum}`, data, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        dispatch({ type: EDIT_SALESPEOPLE, payload: data});
     } catch (error) {
-        console.log("Error editing variant:");
+        console.log("Error editing variant:", error);
     }
 };
+
+
 
 

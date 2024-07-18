@@ -35,7 +35,7 @@ export const salespeopleReducer = (state = initialState, action) => {
         case EDIT_SALESPEOPLE:
             return {
                 ...state,
-                salespeople: state.salespeople.map((v) => v.snum === action.payload.data.snum ? action.payload.data : v),
+                salespeople: state.salespeople.map((v) => v.snum === action.payload.snum ? action.payload : v),
                 error: null,
             };
 
