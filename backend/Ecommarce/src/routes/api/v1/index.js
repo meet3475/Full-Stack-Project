@@ -7,6 +7,7 @@ const subcategoriesRoute = require("./subcategories.routes");
 const productsRoute = require("./products.routes");
 const variantsRoute = require("./variants.routes");
 const salespeopleRoute = require("./salespeople.routes");
+const usersRoute = require("./users.routes");
 
 //localhost:3000/api/v1/categories
 routes.use("/categories", categoriesRoute);
@@ -18,5 +19,7 @@ routes.use("/products", productsRoute);
 routes.use("/variants", variantsRoute);
 //localhost:8000/api/v1/salespeople
 routes.use("/salespeople", salespeopleRoute);
+//localhost:8000/api/v1/users
+routes.use("/users", usersRoute);
 
 module.exports = routes;
