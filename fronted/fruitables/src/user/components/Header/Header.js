@@ -107,6 +107,8 @@ function Header(props) {
                   </div>
                 </div>
                 <NavLink to='/Contact' className="nav-item nav-link">Contact</NavLink>
+                <NavLink to='/Register' className="nav-item nav-link">Register</NavLink>
+                <NavLink to='/Login' className="nav-item nav-link">Login</NavLink>
               </div>
               <div className="d-flex m-3 me-0">
                 <button className="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i className="fas fa-search text-primary" /></button>

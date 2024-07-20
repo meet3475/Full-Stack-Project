@@ -13,6 +13,8 @@ import ShopDetail from '../../user/containers/ShopDetail/ShopDetail';
 import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import Review from '../../user/containers/Review/Review';
 import { ThemeContext } from '../../Context/ThemeContext';
+import Login from '../../user/containers/Login/Login';
+import Register from '../../user/containers/Register/Register';
 
 
 function UserRoute(props) {
@@ -43,6 +45,8 @@ function UserRoute(props) {
                     <Route exact path="/Page" element={<Page />} />
                     <Route exact path="/Contact" element={<Contact />} />
                     <Route exact path="/Review" element={<Review />} />
+                    <Route exact path="/Login" element={<Login />} />
+                    <Route exact path="/Register" element={<Register />} />
                 </Routes>
                 <Footer />
             </>
