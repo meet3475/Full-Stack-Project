@@ -24,6 +24,10 @@ const usersSchema = new mongooes.Schema(
             trim: true,
             required: true
         },
+        refreshToken : {
+            type: String,
+            required: true
+        },
         isActive: {
             type: Boolean,
             default: true

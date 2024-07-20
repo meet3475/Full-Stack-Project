@@ -9,5 +9,9 @@ routes.post(
     usersController.ragister
 )
 
+routes.post(
+    '/login', 
+    usersController.login
+)
 
 module.exports = routes;
