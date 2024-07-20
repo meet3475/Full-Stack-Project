@@ -79,10 +79,13 @@ const ragister = async (req, res) => {
             })
         }
 
+        const { accessToken, refreshToken } = await craeteToken(userData._id);
+
         res.status(201).json({
             success: true,
             message: "ragister succesfully",
-            data: userDataF
+            data: userDataF,
+            tokens: { accessToken, refreshToken }
         })
 
     } catch (error) {
@@ -120,6 +123,12 @@ const login = async (req, res) => {
         const {accessToken, refreshToken} = await craeteToken(user._id)
 
         console.log({accessToken, refreshToken});
+
+        res.status(200).json({
+            success: true,
+            message: "login successful",
+            tokens: { accessToken, refreshToken }
+        });
 
     } catch (error) {
         res.status(500).json({

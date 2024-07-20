@@ -26,7 +26,7 @@ const usersSchema = new mongooes.Schema(
         },
         refreshToken : {
             type: String,
-            required: true
+            // required: true
         },
         isActive: {
             type: Boolean,
