@@ -79,13 +79,13 @@ const ragister = async (req, res) => {
             })
         }
 
-        const { accessToken, refreshToken } = await craeteToken(userData._id);
+        // const { accessToken, refreshToken } = await craeteToken(userData._id);
 
         res.status(201).json({
             success: true,
             message: "ragister succesfully",
             data: userDataF,
-            tokens: { accessToken, refreshToken }
+            // tokens: { accessToken, refreshToken }
         })
 
     } catch (error) {
@@ -124,11 +124,32 @@ const login = async (req, res) => {
 
         console.log({accessToken, refreshToken});
 
-        res.status(200).json({
-            success: true,
-            message: "login successful",
-            tokens: { accessToken, refreshToken }
-        });
+        // res.status(200).json({
+        //     success: true,
+        //     message: "login successful",
+        //     tokens: { accessToken, refreshToken }
+        // });
+
+
+        const userDataF = await Users.findById({ _id: user._id }).select("-password -refreshToken")
+
+        const option = {
+            httpOnly : true,
+            secure: true
+        }
+
+        res.status(200)
+            .cookie("accessToken", accessToken, option)
+            .cookie("refreshToken", refreshToken, option)
+            .json({
+                success : true,
+                message : "Login Sucessfully",
+                data: {
+                    ...userDataF.toObject(),
+                    accessToken
+                }
+            })
+
 
     } catch (error) {
         res.status(500).json({
@@ -138,7 +159,19 @@ const login = async (req, res) => {
     }
 }
 
+const generateNewTokens = async (req, body) => {
+    try {
+        const {accessToken} = req.cookie
+        const 
+
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+ 
 module.exports = {
     ragister,
-    login
+    login,
+    generateNewTokens
 } 
