@@ -161,8 +161,8 @@ const login = async (req, res) => {
 const generateNewTokens = async (req, res) => {
     try {
         console.log(req.cookies.refreshToken);
-        
-        const VerifyToken = await jwt.verify(req.cookies.refreshToken,  'djkjkkj4679hbjjk');
+
+        const VerifyToken = await jwt.verify(req.cookies.refreshToken, 'djkjkkj4679hbjjk');
         console.log(VerifyToken);
 
         if (!VerifyToken) {
@@ -217,8 +217,65 @@ const generateNewTokens = async (req, res) => {
     }
 }
 
+const logout = async (req, res) => {
+    try {
+        const  refreshToken  = req.cookies.refreshToken;
+
+        console.log(refreshToken);
+
+        if (!refreshToken) {
+            return res.status(400).json({
+                success: false,
+                message: "No refresh token provided"
+            });
+        }
+
+        const VerifyToken = await jwt.verify(refreshToken, 'djkjkkj4679hbjjk');
+
+        if (!VerifyToken) {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid refresh token"
+            });
+        }
+
+        console.log(VerifyToken);
+
+        const user = await Users.findById(VerifyToken._id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+
+        console.log(user);
+
+        user.refreshToken = null;
+        await user.save({ validateBeforeSave: false });
+
+        res.clearCookie("accessToken");
+        res.clearCookie("refreshToken");
+
+        return res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error: " + error.message
+        });
+    }
+}
+
+
+
 module.exports = {
     ragister,
     login,
-    generateNewTokens
+    generateNewTokens,
+    logout
 } 
