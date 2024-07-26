@@ -215,53 +215,36 @@ const generateNewTokens = async (req, res) => {
             message: "internal server error" + error.message
         })
     }
-}
+} 
 
 const logout = async (req, res) => {
     try {
-        const  refreshToken  = req.cookies.refreshToken;
+        console.log(req.body._id);
 
-        console.log(refreshToken);
-
-        if (!refreshToken) {
-            return res.status(400).json({
-                success: false,
-                message: "No refresh token provided"
-            });
-        }
-
-        const VerifyToken = await jwt.verify(refreshToken, 'djkjkkj4679hbjjk');
-
-        if (!VerifyToken) {
-            return res.status(400).json({
-                success: false,
-                message: "Invalid refresh token"
-            });
-        }
-
-        console.log(VerifyToken);
-
-        const user = await Users.findById(VerifyToken._id);
-
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: "User not found"
-            });
-        }
+        const user = await Users.findByIdAndUpdate(
+            req.body._id,
+            {
+                $unset :{ refreshToken : 1}
+            },
+            {
+                new: true
+            }
+        )
 
         console.log(user);
 
-        user.refreshToken = null;
-        await user.save({ validateBeforeSave: false });
+        if (!user) {
+            return res.status(400).json({
+                success: false,
+                message: "User Not Logout"
+            });
+        }
 
-        res.clearCookie("accessToken");
-        res.clearCookie("refreshToken");
-
-        return res.status(200).json({
+        res.status(200).json({
             success: true,
-            message: "Logged out successfully"
+            message: "User Logeed Out."
         });
+
     } catch (error) {
         console.log(error);
         return res.status(500).json({
