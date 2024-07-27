@@ -17,7 +17,6 @@ const usersSchema = new mongooes.Schema(
         password: {
             type: String,
             trim: true,
-            required: true
         },
         role: {
             type: String,
@@ -27,6 +26,9 @@ const usersSchema = new mongooes.Schema(
         refreshToken : {
             type: String,
             // required: true
+        },
+        googleId: {
+            type: String
         },
         isActive: {
             type: Boolean,
