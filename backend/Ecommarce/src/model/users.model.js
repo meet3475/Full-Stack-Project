@@ -27,7 +27,10 @@ const usersSchema = new mongooes.Schema(
             type: String,
             // required: true
         },
-        googleId: {
+        // googleId: {
+        //     type: String
+        // },
+        facebookId: {
             type: String
         },
         isActive: {
