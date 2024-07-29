@@ -1,6 +1,7 @@
 const Users = require('../model/users.model');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const sentMail = require('../utils/nodemailer');
 
 const craeteToken = async (id) => {
     try {
@@ -80,12 +81,16 @@ const ragister = async (req, res) => {
 
         // const { accessToken, refreshToken } = await craeteToken(userData._id);
 
+        
+
         res.status(201).json({
             success: true,
             message: "ragister succesfully",
             data: userDataF,
             // tokens: { accessToken, refreshToken }
         })
+
+        sentMail()
 
     } catch (error) {
         res.status(500).json({

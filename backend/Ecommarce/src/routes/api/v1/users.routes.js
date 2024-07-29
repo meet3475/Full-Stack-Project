@@ -1,6 +1,7 @@
 const express = require("express");
 const { usersController } = require("../../../controller");
 const passport = require("passport");
+const sentMail = require("../../../utils/nodemailer");
 
 const routes = express.Router();
 
@@ -52,5 +53,11 @@ routes.get(
         // Successful authentication, redirect home.
         res.redirect('/');
     });
+
+
+    // routes.get(
+    //     '/sendMail',
+    //     sentMail
+    // )
 
 module.exports = routes;
