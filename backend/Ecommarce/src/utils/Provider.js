@@ -6,9 +6,9 @@
 
 //     try {
 //         await passport.use(new GoogleStrategy({
-//             clientID: '',
-//             clientSecret: '',
-//             callbackURL: "http://localhost:8000/api/v1/users/google/callback"
+                // clientID: '635314853487-jrf5m4rde6u7u0k2nkjnih0bi17i4p4f.apps.googleusercontent.com',
+                // clientSecret: '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',
+                // callbackURL: "http://localhost:8000/api/v1/users/google/callback"
 //         },
 //             async function (accessToken, refreshToken, profile, cb) {
 //                 console.log(profile);
@@ -57,8 +57,8 @@ const FacebookProvider = async () => {
     console.log("Initializing FacebookProvider...");
     try {
         passport.use(new FacebookStrategy({
-            // clientID: "784353853881283",
-            // clientSecret: "66bf9d5b9ddc2663a9195fa6f532430b",
+            clientID: "784353853881283",
+            clientSecret: "66bf9d5b9ddc2663a9195fa6f532430b",
             callbackURL: "http://localhost:8000/api/v1/users/facebook/callback",
             profileFields: ['id', 'displayName', 'emails'] // Specify which fields to return
         },
@@ -115,7 +115,7 @@ const FacebookProvider = async () => {
                 done(err, null);
             }
         });
-        
+
     } catch (error) {
         console.error("Error initializing FacebookProvider:", error.message);
     }
