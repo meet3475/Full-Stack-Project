@@ -81,7 +81,7 @@ const ragister = async (req, res) => {
 
         // const { accessToken, refreshToken } = await craeteToken(userData._id);
 
-        
+        await sentMail(email);
 
         res.status(201).json({
             success: true,
@@ -89,8 +89,6 @@ const ragister = async (req, res) => {
             data: userDataF,
             // tokens: { accessToken, refreshToken }
         })
-
-        sentMail()
 
     } catch (error) {
         res.status(500).json({

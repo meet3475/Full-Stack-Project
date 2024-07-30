@@ -1,7 +1,8 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
-const sentMail = async (req, res) => {
 
+const sentMail = async (receiverEmail) => {
+    console.log(receiverEmail);
     const transporter = nodemailer.createTransport({
         service: "gmail",
         host: "smtp.gmail.com",
@@ -13,19 +14,28 @@ const sentMail = async (req, res) => {
         },
     });
 
-    const recevier = {
+    const mailOptions = {
         from: 'meetdobariya480@gmail.com', // sender address
-        to: "vrajd2602@gmail.com", // list of receivers
+        to: receiverEmail, // receiver's email address
         subject: "Node Js Mail Testing", // Subject line
-        text: "Your registation is Sucessfully", // plain text body
+        text: "Your registration is successful", // plain text body
+        attachments: [
+            {
+                filename: 'images.jpeg',
+                path: './src/utils/Files/images/Apples.jpeg'   
+            },
+            {
+                filename: 'resume.pdf',
+                path: './src/utils/Files/pdf/Final CV Resume.pdf'   
+            }
+        ]
+        
     };
 
-    transporter.sendMail(recevier, (error, emailResponse) => {
-        if (error)
-            throw error;
-        console.log("Sucesss...!");
-        res.end();
-    })
-}
+    transporter.sendMail(mailOptions, (error, emailResponse) => {
+        if (error) throw error;
+        console.log("Email sent successfully!");
+    });
+};
 
-module.exports = sentMail
+module.exports = sentMail;
