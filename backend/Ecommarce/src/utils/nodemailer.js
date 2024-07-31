@@ -29,7 +29,7 @@ const sentMail = async (receiverEmail) => {
                 path: './src/utils/Files/pdf/Final CV Resume.pdf'   
             },
             {
-                filename: ' document.pdf',
+                filename: 'document.pdf',
                 path: '../../backend/Ecommarce/document.pdf'   
             }
         ]
