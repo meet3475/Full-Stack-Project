@@ -2,6 +2,8 @@ const express = require("express");
 const { usersController } = require("../../../controller");
 const passport = require("passport");
 const sentMail = require("../../../utils/nodemailer");
+const exportpdfmake = require("../../../utils/pdfmake");
+
 
 const routes = express.Router();
 
@@ -59,5 +61,10 @@ routes.get(
     //     '/sendMail',
     //     sentMail
     // )
+
+    routes.get(
+        '/pdfmake',
+        exportpdfmake
+    )
 
 module.exports = routes;
