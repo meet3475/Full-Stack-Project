@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { io } from 'socket.io-client';
 
 function Chat(props) {
 
     const socket = useMemo(() => io('http://localhost:8080'));
+
+    const [message, setMessage] = useState('');
+    const [room, setRoom] = useState('');
 
     useEffect(() => {
         socket.on('connect', () => {
@@ -16,14 +19,14 @@ function Chat(props) {
     }, [])
 
 
-    const handleForm = (event) => {
-        event.preventDefault();
-        const id = event.target.id.value;
-        const message = event.target.message.value;
-        console.log("Form submitted with id:", id, "and message:", message);
+    
 
-        socket.emit('privateMessage', { id, message });
-    };
+    const hendalsubmit = (event) => {
+        event.preventDefault()
+        socket.emit('message', { message, room })
+        setMessage('')
+        setRoom('')
+    }
    
 
     return (
@@ -38,10 +41,24 @@ function Chat(props) {
             </div>
             <br></br><br></br><br></br>
 
-            <form onSubmit={handleForm}>
-                <input type="text" name="id" placeholder="please entre id"/>        
-                <input type="text" name="message" placeholder="please entre message"/>
-                 <button type="submit">Submit</button>
+            <form onSubmit={hendalsubmit}>
+                <input
+                    type="text"
+                    name="message"
+                    id='message'
+                    placeholder="Type a message"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                />
+                <input
+                    type="text"
+                    name="room"
+                    id='room'
+                    placeholder="Enter Room"
+                    value={room}
+                    onChange={(e) => setRoom(e.target.value)}
+                />
+                <button type="submit">Send</button>
             </form>
          
         </div>

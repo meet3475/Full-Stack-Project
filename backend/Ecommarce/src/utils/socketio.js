@@ -13,6 +13,11 @@ const connectChat = () => {
         socket.emit("welcome", "YOU ARE WELCOME FRUITABLE");
 
         socket.broadcast.emit("greeting", "HELLO ALL");
+
+        socket.on('message', ({room,message}) => {
+            console.log({room,message});
+            io.to(room).emit('receive-message', message )
+        })
     });
     
     io.listen(8080);
