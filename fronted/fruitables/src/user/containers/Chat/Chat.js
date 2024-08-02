@@ -22,14 +22,12 @@ function Chat(props) {
         const message = event.target.message.value;
         console.log("Form submitted with id:", id, "and message:", message);
 
-        // Emitting the form data through the socket connection
         socket.emit('privateMessage', { id, message });
     };
    
 
     return (
         <div>
-            {/* Single Page Header start */}
             <div className="container-fluid page-header py-5">
                 <h1 className="text-center text-white display-6">Chat</h1>
                 <ol className="breadcrumb justify-content-center mb-0">
@@ -38,8 +36,6 @@ function Chat(props) {
                     <li className="breadcrumb-item active text-white">Chat</li>
                 </ol>
             </div>
-            {/* Single Page Header End */}
-
             <br></br><br></br><br></br>
 
             <form onSubmit={handleForm}>
