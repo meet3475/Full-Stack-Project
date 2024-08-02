@@ -25,7 +25,7 @@ export const addsalespeople = (data) => async (dispatch) => {
 };
 
 export const deletesalespeople = (snum) => async (dispatch) => {
-    console.log(snum);
+    // console.log(snum);
     try {
         await axios.delete(`http://localhost:8000/api/v1/salespeople/delete-salespeople/${snum}`);
         dispatch({ type: DELETE_SALESPEOPLE, payload: snum });
@@ -35,7 +35,7 @@ export const deletesalespeople = (snum) => async (dispatch) => {
 };
 
 export const editsalespeople = (data) => async (dispatch) => {
-    console.log(data);
+    // console.log(data);
     try {
         await axios.put(`http://localhost:8000/api/v1/salespeople/update-salespeople/${data.snum}`, data, {
             headers: {

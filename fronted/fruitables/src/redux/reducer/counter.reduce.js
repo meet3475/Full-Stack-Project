@@ -7,7 +7,7 @@ const insitialiState = {
 }
 
 export const counterReducer = (state = insitialiState, action) => {
-    console.log(action);
+    // console.log(action);
 
     switch (action.type) {
         case INCREMENT_COUNTER:

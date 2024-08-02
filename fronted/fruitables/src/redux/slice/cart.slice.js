@@ -12,7 +12,7 @@ const cartSlice = createSlice({
     reducers: {
         addToCart: (state, action) => {
             const index = state.cart.findIndex((v) => v.Pid === action.payload.id);
-            console.log(index);
+            // console.log(index);
 
             if (index !== -1) {
                 state.cart[index].qty += action.payload.count
@@ -20,11 +20,11 @@ const cartSlice = createSlice({
                 state.cart.push({ Pid: action.payload.id, qty: action.payload.count});
             }
 
-            console.log(action);
+            // console.log(action);
 
         },
         plusToCart: (state, action) => {
-            console.log(action.payload);
+            // console.log(action.payload);
 
             const index = state.cart.findIndex((v) => v.Pid === action.payload);
 
@@ -32,7 +32,7 @@ const cartSlice = createSlice({
         },
         minusToCart: (state, action) => {
 
-            console.log(action.payload);
+            // console.log(action.payload);
 
             const index = state.cart.findIndex((v) => v.Pid === action.payload);
             
@@ -41,7 +41,7 @@ const cartSlice = createSlice({
         },
         deleteToCart: (state, action) => {
 
-            console.log(action.payload);
+            // console.log(action.payload);
 
             state.cart = state.cart.filter((v) => v.Pid !== action.payload);
             

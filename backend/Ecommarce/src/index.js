@@ -5,6 +5,7 @@ const routes = require("./routes/api/v1/index");
 const connectDB = require("./db/mongodb");
 const FacebookProvider = require("./utils/Provider");
 const passport = require("passport");
+const connectChat = require("./utils/socketio");
 // const googleProvider = require("./utils/Provider");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(passport.session());
 connectDB();
 // googleProvider();
 FacebookProvider();
+connectChat();
 
 
 //localhost:3000/api/v1

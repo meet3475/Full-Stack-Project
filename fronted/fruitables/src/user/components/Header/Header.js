@@ -11,7 +11,7 @@ import { getProduct } from '../../../redux/action/product.action';
 
 function Header(props) {
   const cart = useSelector(state => state.cart);
-  console.log(cart);
+  // console.log(cart);
 
   const dispatch = useDispatch();
   const [subcat, setSubcat] = useState([]);
@@ -23,7 +23,7 @@ function Header(props) {
   const totalQtyData = cart.cart.reduce((acc, v) => acc + v.qty, 0);
 
   const themeContext = useContext(ThemeContext);
-  console.log(themeContext);
+  // console.log(themeContext);
 
   const handleTheme = () => {
     themeContext.toggleTheme(themeContext.theme);
@@ -83,6 +83,7 @@ function Header(props) {
                 <NavLink to='/' className="nav-item nav-link active">Home</NavLink>
                 <NavLink to='/Shop' className="nav-item nav-link">Shop</NavLink>
                 <NavLink to='/Shop_Detail' className="nav-item nav-link">Shop Detail</NavLink>
+                <NavLink to='/chat' className="nav-item nav-link">Chat</NavLink>
                 <div className="nav-item dropdown">
                   <a href="#" className="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                   <div className="dropdown-menu m-0 bg-secondary rounded-0">
@@ -107,8 +108,8 @@ function Header(props) {
                   </div>
                 </div>
                 <NavLink to='/Contact' className="nav-item nav-link">Contact</NavLink>
-                <NavLink to='/Register' className="nav-item nav-link">Register</NavLink>
-                <NavLink to='/Login' className="nav-item nav-link">Login</NavLink>
+                {/* <NavLink to='/Register' className="nav-item nav-link">Register</NavLink>
+                <NavLink to='/Login' className="nav-item nav-link">Login</NavLink> */}
               </div>
               <div className="d-flex m-3 me-0">
                 <button className="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i className="fas fa-search text-primary" /></button>

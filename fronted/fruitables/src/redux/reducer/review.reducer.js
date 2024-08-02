@@ -8,7 +8,7 @@ const initialState = {
 }
 
 export const  reviewReducer = (state = initialState, action) => {
-    console.log(action);
+    // console.log(action);
 
     switch (action.type) {
         case GET_REVIEW:

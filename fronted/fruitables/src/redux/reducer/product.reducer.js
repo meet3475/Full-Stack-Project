@@ -7,7 +7,7 @@ const initialState = {
 }
 
 export const productReducer = (state = initialState, action) => {
-    console.log(action);
+    // console.log(action);
 
     switch (action.type) {
 

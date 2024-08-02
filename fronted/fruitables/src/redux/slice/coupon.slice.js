@@ -63,22 +63,22 @@ const couponSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder.addCase(addcoupon.fulfilled, (state, action) => {
-            console.log(action);
+            // console.log(action);
             state.coupon = state.coupon.concat(action.payload)
         })
 
         builder.addCase(getCoupon.fulfilled, (state, action) => {
-            console.log(action);
+            // console.log(action);
             state.coupon = (action.payload)
         })
         
         builder.addCase(deleteCoupon.fulfilled, (state, action) => {
-            console.log(action);
+            // console.log(action);
             state.coupon = state.coupon.filter((v) => v.id !== action.payload)
         })
 
         builder.addCase(updateCoupon.fulfilled, (state, action) => {
-            console.log(action);
+            // console.log(action);
             state.coupon = state.coupon.map((v) => {
                 if (v.id === action.payload.id) {
                     return action.payload
