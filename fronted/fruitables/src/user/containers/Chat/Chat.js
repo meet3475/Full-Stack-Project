@@ -4,30 +4,42 @@ import { io } from 'socket.io-client';
 function Chat(props) {
 
     const socket = useMemo(() => io('http://localhost:8080'));
+    const [rec, setRec] = useState('');
+    const [msg, setMsg] = useState('');
+    const [allmsg, setAllmsg] = useState([]);
+    const [gruop, setGruop] = useState('');
 
-    const [message, setMessage] = useState('');
-    const [room, setRoom] = useState('');
 
     useEffect(() => {
         socket.on('connect', () => {
-            console.log('Cilent To Connenct',socket.id);
+            console.log('Cilent To Connenct', socket.id);
         });
 
-        socket.on('welcome', (msg) => {console.log(msg)});
+        socket.on('welcome', (msg) => { console.log(msg) });
 
-        socket.on('greeting', (msg) => {console.log(msg)});
-    }, [])
+        socket.on('greeting', (msg) => { console.log(msg) });
+
+        socket.on('rec-msg', (msg) => {setAllmsg(prev => [...prev, msg])});
+       
+    }, [gruop])
 
 
-    
+
 
     const hendalsubmit = (event) => {
         event.preventDefault()
-        socket.emit('message', { message, room })
-        setMessage('')
-        setRoom('')
+        socket.emit('message', {
+            reciver: rec,
+            message: msg
+        })
     }
-   
+
+    const hendalgruopsubmit = (event) => {
+        event.preventDefault()
+        console.log("ggggg", gruop);
+        
+        socket.emit('join-gruop', gruop)
+    }
 
     return (
         <div>
@@ -39,28 +51,46 @@ function Chat(props) {
                     <li className="breadcrumb-item active text-white">Chat</li>
                 </ol>
             </div>
-            <br></br><br></br><br></br>
+            <br></br><br></br>
+
+            {
+                allmsg.map((v) => (
+                    <p>{v}</p>
+                ))
+            }
+
+            <form onSubmit={hendalgruopsubmit}>
+                <input
+                    type="text"
+                    name="rec"
+                    placeholder="Please Enter Gruop Name:"
+                    onChange={(e) => setGruop(e.target.value)}
+                />
+
+                <input type='submit' />
+            </form>
+
+            <br></br>
 
             <form onSubmit={hendalsubmit}>
                 <input
                     type="text"
-                    name="message"
-                    id='message'
-                    placeholder="Type a message"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
+                    name="rec"
+                    placeholder="Please Enter Reciver id:"
+                    onChange={(e) => setRec(e.target.value)}
                 />
+
+
                 <input
                     type="text"
-                    name="room"
-                    id='room'
-                    placeholder="Enter Room"
-                    value={room}
-                    onChange={(e) => setRoom(e.target.value)}
+                    name="msg"
+                    placeholder="Please Enter a message"
+                    onChange={(e) => setMsg(e.target.value)}
                 />
-                <button type="submit">Send</button>
+
+                <input type='submit' />
             </form>
-         
+
         </div>
     );
 }

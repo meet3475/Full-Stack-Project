@@ -14,12 +14,23 @@ const connectChat = () => {
 
         socket.broadcast.emit("greeting", "HELLO ALL");
 
-        socket.on('message', ({room,message}) => {
-            console.log({room,message});
-            io.to(room).emit('receive-message', message )
+       
+
+        socket.on('message', (data) => {
+            console.log(data);
+
+            io.to(data.reciver).emit('rec-msg', data.message)
         })
+
+        socket.on('join-gruop', async (gruop_name) => {
+            console.log(gruop_name);
+
+            socket.join(gruop_name)
+        })
+
+
     });
-    
+
     io.listen(8080);
 }
 
