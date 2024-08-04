@@ -23,6 +23,9 @@ function Chat(props) {
        
     }, [gruop])
 
+
+
+
     const hendalsubmit = (event) => {
         event.preventDefault()
         socket.emit('message', {
@@ -76,7 +79,8 @@ function Chat(props) {
                     placeholder="Please Enter Reciver id:"
                     onChange={(e) => setRec(e.target.value)}
                 />
-                
+
+
                 <input
                     type="text"
                     name="msg"
