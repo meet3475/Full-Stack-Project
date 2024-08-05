@@ -3,6 +3,7 @@ const { usersController } = require("../../../controller");
 const passport = require("passport");
 const sentMail = require("../../../utils/nodemailer");
 const exportpdfmake = require("../../../utils/pdfmake");
+const { sendOTP, verifyOTP } = require("../../../utils/twilio");
 
 
 const routes = express.Router();
@@ -57,14 +58,25 @@ routes.get(
     });
 
 
-    // routes.get(
-    //     '/sendMail',
-    //     sentMail
-    // )
+// routes.get(
+//     '/sendMail',
+//     sentMail
+// )
 
-    routes.get(
-        '/pdfmake',
-        exportpdfmake
-    )
+routes.get(
+    '/pdfmake',
+    exportpdfmake
+)
+
+
+routes.post(
+    '/sendotp',
+    sendOTP
+)
+
+routes.post(
+    '/verifyotp',
+    verifyOTP
+)
 
 module.exports = routes;
