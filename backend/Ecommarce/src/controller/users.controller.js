@@ -98,6 +98,22 @@ const ragister = async (req, res) => {
     }
 }
 
+const ragisterOTP = async (req, res) => {
+
+        res.status(200).json({
+            success: true,
+            message: "ragister with OTP succesfully"
+        })
+
+}
+
+const verifyotp = async (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "verify with OTP succesfully"
+    })
+}
+
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -261,6 +277,8 @@ const logout = async (req, res) => {
 
 module.exports = {
     ragister,
+    ragisterOTP,
+    verifyotp,
     login,
     generateNewTokens,
     logout

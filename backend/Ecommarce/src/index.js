@@ -12,7 +12,7 @@ const app = express();
 app.use(cookieParser()) 
 app.use(cors())
 app.use(express.json())
-app.use(require("express-session")({ secret: 'shjhj567',  resave: false, saveUninitialized: false}));
+app.use(require("express-session")({ secret: 'shjhj567',  resave: false, saveUninitialized: false, cookie: {secure: false}}));
 app.use(passport.initialize());
 app.use(passport.session());
 

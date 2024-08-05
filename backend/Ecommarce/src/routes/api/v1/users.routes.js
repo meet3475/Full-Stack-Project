@@ -6,6 +6,7 @@ const exportpdfmake = require("../../../utils/pdfmake");
 const { sendOTP, verifyOTP } = require("../../../utils/twilio");
 
 
+
 const routes = express.Router();
 
 
@@ -13,6 +14,19 @@ routes.post(
     '/register',
     usersController.ragister
 )
+
+routes.post(
+    '/registerOTP',
+    sendOTP,
+    usersController.ragisterOTP
+)
+
+routes.post(
+    '/verifyOTP',
+    verifyOTP,
+    usersController.verifyotp
+)
+
 
 routes.post(
     '/login',
@@ -69,14 +83,6 @@ routes.get(
 )
 
 
-routes.post(
-    '/sendotp',
-    sendOTP
-)
 
-routes.post(
-    '/verifyotp',
-    verifyOTP
-)
 
 module.exports = routes;

@@ -1,50 +1,45 @@
-const accountSid = 'AC6b4155bf5fdb5a4e16745c3d08dbe189';
-const authToken = '1e0daecb6595728cca88c0c872a861d6';
-const serviceid = 'VA2978a2b9dd4026f6ee7156e9b1adeb37';
 
-const client = require('twilio')(accountSid, authToken, {
-    lazyLoading : true
-});
-
-
-const sendOTP = async (req, res, next) => {
-
-    const { countrycode, mobileNumber } = req.body;
+const sendOTP = (req, res, next) => {
     try {
+        const accountSid = 'ACd7f49cded3c85f950ebb7a2360abfe82';
+        const authToken = '988e54e3e32304dcc8d1af9571c22908';
+        const client = require('twilio')(accountSid, authToken);
+
+        const otp = Math.floor(100000 + Math.random() * 900000);
+
+        req.session.otp = otp
+
+        client.messages
+            .create({
+                body: otp,
+                from: '+12513103274',
+                to: '+919016758258'
+            })
+            .then(message => next())
+
+    } catch (error) {
+        console.log("sendOTP error:", error);
         
-        const otpResponse = await client.verify
-        .services(serviceid)
-        .verifications.create({
-            to: `+${countrycode}${mobileNumber}`, // Your phone number
-            channel: 'sms'
-        })
-
-        res.status(200).send(`OTP send Sucessfully : ${JSON.stringify(otpResponse)}`)
-
-    } catch (error) {
-        res.status(error?.status || 400).send(error?.message || 'something went wrong!');
     }
 }
 
-
-const verifyOTP = async (req, res, next) => {
-    const { countrycode, mobileNumber, otp } = req.body;
-
+const verifyOTP = (req, res, next) => {
     try {
-        const verificationsResponse = await client.verify
-        .services(serviceid)
-        .verificationChecks.create({
-            to: `+${countrycode}${mobileNumber}`, // Your phone number
-            code: otp,
+        console.log("verifyOTP", req.session.otp)
+
+        if (req.session.otp == req.body.otp) {
+            next()
+        }
+
+        res.status(400).json({
+            success: false,
+            message: "OTP invalid..!"
         })
 
-        res.status(200).send(`OTP verified Sucessfully : ${JSON.stringify(verificationsResponse)}`)
     } catch (error) {
-        res.status(error?.status || 400).send(error?.message || 'something went wrong!');
+        console.log("verifyOTP error:", error);
     }
-
 }
-
 
 module.exports = {
     sendOTP,
