@@ -1,6 +1,8 @@
 const express = require("express");
 const { categoriesController } = require("../../../controller");
 const auth = require("../../../middlewar/auth");
+const { Validation } = require("../../../middlewar/validation");
+const { categoryValidation } = require("../../../../validation");
 
 
 const routes = express.Router();
@@ -49,6 +51,7 @@ routes.get(
 
 routes.post(
     '/add-categories', 
+    Validation(categoryValidation.createcategory),
     categoriesController.addcategory
 )
 
