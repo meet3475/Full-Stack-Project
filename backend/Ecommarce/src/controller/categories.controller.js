@@ -2,21 +2,42 @@ const Categories = require("../model/categories.model")
 
 const listcategories = async (req, res) => {
 
-    console.log("categroyDone",  req.user);
+    console.log("categroyDone", req.query.page, req.query.pageSize);
+
     try {
+
+        let page = parseInt(req.query.page);
+        let pageSize = parseInt(req.query.pageSize)
+
+        if (page <= 0 || pageSize <= 0) {
+           return res.status(400).json({
+                success: false,
+                message: "page and pagesize must be greter than zero."
+            })
+        }
+
         const categories = await Categories.find();
 
         if (!categories || categories.length === 0) {
-            res.status(404).json({
+            return res.status(404).json({
                 success: false,
                 message: "Categories not found"
             })
         }
 
+        let startIndex=0, endIndex=0, paginationdata=[]
+        
+        if (page > 0 || pageSize > 0) {           //page=2, pageSize=3
+            startIndex = (page - 1) * pageSize;  // 2-1 * 3 = 3
+            endIndex = startIndex + pageSize;    // 3 + 3 = 6
+            paginationdata = categories.slice(startIndex, endIndex);
+        }
+
         res.status(200).json({
             success: true,
+            totaldata: categories.length,
             message: "categories fetched sucessfully",
-            data: categories
+            data: paginationdata
         })
 
     } catch (error) {
@@ -157,7 +178,7 @@ const totalProducts = async (req, res) => {
                 "TotalProduct": {
                     $sum: 1
                 },
-                "product_name" : {$push : "$product.name"}
+                "product_name": { $push: "$product.name" }
             }
         }
     ])
@@ -196,32 +217,32 @@ const countSubcategories = async (req, res) => {
     const categories = await Categories.aggregate([
         {
             $lookup: {
-              from: "subcategories",
-              localField: "_id",
-              foreignField: "category_id",
-              as: "subcategory"
+                from: "subcategories",
+                localField: "_id",
+                foreignField: "category_id",
+                as: "subcategory"
             }
-          },
-          {
+        },
+        {
             $match: {
-              "subcategory" : {$ne : []}
+                "subcategory": { $ne: [] }
             }
-          },
-          {
+        },
+        {
             $unwind: {
-              path: "$subcategory"
+                path: "$subcategory"
             }
-          },
-          {
+        },
+        {
             $group: {
-              _id: "$_id",
-              "category_name" : {$first : "$name"},
-              "CountSubcategories": {
-                $sum: 1
-              },
-              "subcategory_name" : {$push : "$subcategory.name"}
+                _id: "$_id",
+                "category_name": { $first: "$name" },
+                "CountSubcategories": {
+                    $sum: 1
+                },
+                "subcategory_name": { $push: "$subcategory.name" }
             }
-          }
+        }
     ])
 
     res.status(200).json({
@@ -238,18 +259,18 @@ const specificCategory = async (req, res) => {
     const categories = await Categories.aggregate([
         {
             $lookup: {
-              from: "subcategories",
-              localField: "_id",
-              foreignField: "category_id",
-              as: "subcategory"
+                from: "subcategories",
+                localField: "_id",
+                foreignField: "category_id",
+                as: "subcategory"
             }
-          },
-          {
+        },
+        {
             $project: {
-              "name" : 1,
-              "subcategory" : 1
+                "name": 1,
+                "subcategory": 1
             }
-          }
+        }
     ])
 
     res.status(200).json({
@@ -264,6 +285,10 @@ const specificCategory = async (req, res) => {
 
 
 const addcategory = async (req, res) => {
+
+    console.log("abcdfh", req.body);
+
+
     try {
         console.log(req.body);
 

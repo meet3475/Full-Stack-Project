@@ -14,16 +14,18 @@ const Validation = (schema) => (req, res, next) => {
             .prefs({
                 abortEarly: false
             })
-            .validate(object);
+            .validate(objs);
 
-        console.log(error, value);
+        console.log(value);
 
         if (error) {
             const errMsg = error.details.map((v) => v.message).join(", ")
 
-            return object.assign(errMsg)
-
+            return (next(new Error("validation error: " + errMsg)))
+           
         }
+
+        Object.assign(req, value);
         next();
         
     } catch (error) {

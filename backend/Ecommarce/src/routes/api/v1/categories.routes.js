@@ -14,8 +14,14 @@ routes.get(
     categoriesController.listcategories
 )
 
+// routes.get(
+//     '/get-categories/:category_id', 
+//     categoriesController.getcategory
+// )
+
 routes.get(
-    '/get-categories/:category_id', 
+    '/get-categories',
+    Validation(categoryValidation.getcategory),
     categoriesController.getcategory
 )
 
@@ -57,11 +63,13 @@ routes.post(
 
 routes.put(
     '/update-category/:category_id', 
+    Validation(categoryValidation.updatecategory),
     categoriesController.updatecategory
 )
 
 routes.delete(
     '/delete-category/:category_id', 
+    Validation(categoryValidation.deletecategory),
     categoriesController.deletecategory
 )
 
