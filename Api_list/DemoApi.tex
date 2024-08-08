@@ -1892,3 +1892,59 @@ Identify the most popular product (highest number of orders).
 }
 % as sem other data....
 --------------------------------------------------------------------------------------------------
+
+
+[
+  {
+    $lookup: {
+      from: "reviews",
+      localField: "_id",
+      foreignField: "product_id",
+      as: "review"
+    }
+  },
+  {
+    $lookup: {
+      from: "variants",
+      localField: "_id",
+      foreignField: "product_id",
+      as: "variant"
+    }
+  },
+  {
+    $addFields: {
+      "avgrating": {$avg : "$review.rating" }
+    }
+  },
+  {
+    $unwind: {
+      path: "$variant"
+    }
+  },
+  {
+    $match: {
+      "avgrating": {$gte : 4},
+      "category_id" : 1,
+      "variant.attributes.Price" : {$gt: 0, $lt:2000}
+    }
+  },
+  {
+    $group: {
+      _id: "$_id",
+      "name" : {$first : "$name"},
+    	"review": {$push : "$review"},
+      "variant": {$push: "$variant"}
+    }
+  },
+  {
+    $sort: {
+      name: 1
+    }
+  },
+  {
+    $skip: 0
+  },
+  {
+    $limit: 10
+  }
+]
