@@ -31,9 +31,9 @@ const searchName = async (req, res) => {
     const products = await Products.aggregate([
         {
             $match: {
-              "name" : /^[a-zA-Z0-9!@#$&()`.+,/"-]*$/
+                "name": /^[a-zA-Z0-9!@#$&()`.+,/"-]*$/
             }
-          }
+        }
     ])
 
     res.status(200).json({
@@ -187,32 +187,32 @@ const newArrivals = async (req, res) => {
 
 }
 
-const countCategories   = async (req, res) => {
+const countCategories = async (req, res) => {
 
     const products = await Products.aggregate([
         {
             $lookup: {
-              from: "categories",
-              localField: "category_id",
-              foreignField: "_id",
-              as: "category"
+                from: "categories",
+                localField: "category_id",
+                foreignField: "_id",
+                as: "category"
             }
-          },
-          {
+        },
+        {
             $unwind: {
-              path: "$category"
+                path: "$category"
             }
-          },
-          {
+        },
+        {
             $group: {
-              _id: "$category._id",
-              "category_name": {$first : "$category.name"},
-              "product_name" : {$push : "$name"},
-              "TotalProduct": {
-                $sum: 1
-              }
+                _id: "$category._id",
+                "category_name": { $first: "$category.name" },
+                "product_name": { $push: "$name" },
+                "TotalProduct": {
+                    $sum: 1
+                }
             }
-          }
+        }
     ])
 
     res.status(200).json({
@@ -418,6 +418,106 @@ const updateproducts = async (req, res) => {
     // }
 }
 
+const searchProduct = async (req, res) => {
+    try {
+        // console.log(req.body);
+
+        const { sortOrder, rating, max, min, category, page, limit } = req.query  //query
+
+        const matchPip = {}
+
+        if (rating) {
+            matchPip['avgrating'] = { $gte: parseInt(rating) }
+        }
+
+        if (category) {
+            matchPip["category_id"] = parseInt(category)
+        }
+
+        matchPip['variant.attributes.Price'] = {}
+
+        if (min != undefined) {
+            matchPip['variant.attributes.Price'].$gte = parseInt(min)
+        }
+
+        if (max != undefined) {
+            matchPip['variant.attributes.Price'].$lte = parseInt(max)
+        }
+
+        console.log(matchPip);
+
+
+        const pipline = [
+            {
+                $lookup: {
+                    from: "reviews",
+                    localField: "_id",
+                    foreignField: "product_id",
+                    as: "review"
+                }
+            },
+            {
+                $lookup: {
+                    from: "variants",
+                    localField: "_id",
+                    foreignField: "product_id",
+                    as: "variant"
+                }
+            },
+            {
+                $addFields: {
+                    "avgrating": { $avg: "$review.rating" }
+                }
+            },
+            {
+                $unwind: {
+                    path: "$variant"
+                }
+            },
+            {
+                $match: matchPip
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    "name": { $first: "$name" },
+                    "review": { $push: "$review" },
+                    "variant": { $push: "$variant" }
+                }
+            },
+            {
+                $sort: {
+                    name: sortOrder === 'asc' ? 1 : -1
+                }
+            }
+        ]
+
+
+        if (parseInt(page) > 0 && parseInt(limit) > 0) {
+            pipline.push({ $skip: (parseInt(page) - 1) * parseInt(limit) })
+            pipline.push({ $limit: parseInt(limit) })
+        }
+
+        const data = await Products.aggregate(pipline);
+        console.log(data);
+
+        res.status(200).json({
+            success: true,
+            data: data,
+            message: "Product data Fetched",
+        })
+
+
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Intenal server error." + error.message
+        })
+    }
+}
+
 module.exports = {
     listproducts,
     searchName,
@@ -429,5 +529,6 @@ module.exports = {
     getproducts,
     addproducts,
     deleteproducts,
-    updateproducts
+    updateproducts,
+    searchProduct
 }

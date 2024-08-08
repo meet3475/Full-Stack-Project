@@ -62,5 +62,10 @@ routes.delete(
     productsController.deleteproducts
 )
 
+routes.get(
+    '/searchproduct',
+    productsController.searchProduct
+)
+
 
 module.exports = routes;
