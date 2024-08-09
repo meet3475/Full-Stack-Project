@@ -1,65 +1,59 @@
-// const passport = require('passport');
-// const Users = require('../model/users.model');
-// const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
-// const googleProvider = async () => {
-
-//     try {
-//         await passport.use(new GoogleStrategy({
-                // clientID: '635314853487-jrf5m4rde6u7u0k2nkjnih0bi17i4p4f.apps.googleusercontent.com',
-                // clientSecret: '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',
-                // callbackURL: "http://localhost:8000/api/v1/users/google/callback"
-//         },
-//             async function (accessToken, refreshToken, profile, cb) {
-//                 console.log(profile);
-
-//                 try {
-//                     let user = await Users.findOne({ googleId: profile.id })
-
-//                     if (!user) {
-//                         user = await Users.create({
-//                             name: profile.displayName,
-//                             email: profile.emails[0].value,
-//                             googleId: profile.id,
-//                             role: 'user'
-//                         })
-//                     }
-
-//                     return cb(null, user);
-//                 } catch (error) {
-//                     return cb(error, null);
-//                 }
-//             }
-//         ));
-
-//         passport.serializeUser(function (user, done) {
-//             done(null, user.id);
-//         });
-
-//         passport.deserializeUser(async function (id, done) {
-//             await Users.findById(id, function (err, user) {
-//                 done(err, user);
-//             });
-//         });
-//     } catch (error) {
-//         console.log(error);
-//     }
-
-// }
-
-// module.exports = googleProvider
-
 const passport = require('passport');
 const Users = require('../model/users.model');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 
+const googleProvider = async () => {
+
+    try {
+        await passport.use(new GoogleStrategy({
+                clientID: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_ID,
+                callbackURL: process.env.GOOGLE_CALLBACK_URL
+        },
+            async function (accessToken, refreshToken, profile, cb) {
+                console.log(profile);
+
+                try {
+                    let user = await Users.findOne({ googleId: profile.id })
+
+                    if (!user) {
+                        user = await Users.create({
+                            name: profile.displayName,
+                            email: profile.emails[0].value,
+                            googleId: profile.id,
+                            role: 'user'
+                        })
+                    }
+
+                    return cb(null, user);
+                } catch (error) {
+                    return cb(error, null);
+                }
+            }
+        ));
+
+        passport.serializeUser(function (user, done) {
+            done(null, user.id);
+        });
+
+        passport.deserializeUser(async function (id, done) {
+            await Users.findById(id, function (err, user) {
+                done(err, user);
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
 const FacebookProvider = async () => {
-    console.log("Initializing FacebookProvider...");
     try {
         passport.use(new FacebookStrategy({
-            clientID: "784353853881283",
-            clientSecret: "66bf9d5b9ddc2663a9195fa6f532430b",
-            callbackURL: "http://localhost:8000/api/v1/users/facebook/callback",
+            clientID: process.env.FACEBOOK_CLIENT_ID,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
+            callbackURL: process.env.FACEBOOK_CALLBACK_URL,
             profileFields: ['id', 'displayName', 'emails'] // Specify which fields to return
         },
             async function (accessToken, refreshToken, profile, cb) {
@@ -121,4 +115,7 @@ const FacebookProvider = async () => {
     }
 };
 
-module.exports = FacebookProvider;
+module.exports = {
+    googleProvider,
+    FacebookProvider
+}

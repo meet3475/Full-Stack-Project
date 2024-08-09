@@ -1,12 +1,14 @@
+require('dotenv').config()
+
 const express = require("express");
 const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const routes = require("./routes/api/v1/index");
 const connectDB = require("./db/mongodb");
-const FacebookProvider = require("./utils/Provider");
+const { googleProvider, FacebookProvider } = require("./utils/Provider");
 const passport = require("passport");
 const connectChat = require("./utils/socketio");
-// const googleProvider = require("./utils/Provider");
+
 
 const app = express();
 app.use(cookieParser()) 
@@ -17,7 +19,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 connectDB();
-// googleProvider();
+googleProvider();
 FacebookProvider();
 connectChat();
 

@@ -9,13 +9,13 @@ const sentMail = async (receiverEmail) => {
         port: 465,
         secure: true, // Use `true` for port 465, `false` for all other ports
         auth: {
-            user: "meetdobariya480@gmail.com",
-            pass: "sqjyjcpbgdjyheit",
+            user: process.env.NODEMAILER_AUTH_USER,
+            pass: process.env.NODEMAILER_AUTH_PASS,
         },
     });
 
     const mailOptions = {
-        from: 'meetdobariya480@gmail.com', // sender address
+        from: process.env.NODEMAILER_AUTH_USER, // sender address
         to: receiverEmail, // receiver's email address
         subject: "Node Js Mail Testing", // Subject line
         text: "Your registration is successful", // plain text body

@@ -21,15 +21,15 @@ const craeteToken = async (id) => {
             role: user.role,
             expiresIn: '1 hours'
         },
-            'fshjkjhjkas4578ghks',
-            { expiresIn: '1 hours' }
+            process.env.USER_ACCESS_TOKEN_KEY,
+            { expiresIn: process.env.USER_ACCESS_TOKEN_EXPIRY }
         )
 
         const refreshToken = await jwt.sign({
             _id: id,
         },
-            'djkjkkj4679hbjjk',
-            { expiresIn: '2 days' }
+        process.env.USER_REFRESH_TOKEN_KEY,
+            { expiresIn: process.env.USER_REFRESH_TOKEN_KEY}
         )
 
         user.refreshToken = refreshToken;

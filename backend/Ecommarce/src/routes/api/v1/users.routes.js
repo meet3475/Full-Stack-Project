@@ -43,18 +43,18 @@ routes.post(
     usersController.logout
 )
 
-// routes.get(
-//     '/googleLogin',
-//     passport.authenticate('google', { scope: ['profile', 'email'] }));
+routes.get(
+    '/googleLogin',
+    passport.authenticate('google', { scope: ['profile', 'email'] }));
 
-// routes.get(
-//     '/google/callback',
-//     passport.authenticate('google', { failureRedirect: '/login' }),
-//     function (req, res) {
-//         console.log("login sucessfully");
-//         // Successful authentication, redirect home.
-//         // res.redirect('/');
-//     });
+routes.get(
+    '/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    function (req, res) {
+        console.log("login sucessfully");
+        // Successful authentication, redirect home.
+        // res.redirect('/');
+    });
 
 
 routes.get(
