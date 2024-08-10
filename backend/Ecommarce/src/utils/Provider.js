@@ -8,7 +8,7 @@ const googleProvider = async () => {
     try {
         await passport.use(new GoogleStrategy({
                 clientID: process.env.GOOGLE_CLIENT_ID,
-                clientSecret: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
                 callbackURL: process.env.GOOGLE_CALLBACK_URL
         },
             async function (accessToken, refreshToken, profile, cb) {
@@ -25,7 +25,8 @@ const googleProvider = async () => {
                             role: 'user'
                         })
                     }
-
+                    console.log("user data", user);
+                    
                     return cb(null, user);
                 } catch (error) {
                     return cb(error, null);
@@ -34,11 +35,13 @@ const googleProvider = async () => {
         ));
 
         passport.serializeUser(function (user, done) {
+            console.log("serializeUser");
             done(null, user.id);
         });
 
         passport.deserializeUser(async function (id, done) {
             await Users.findById(id, function (err, user) {
+                console.log("deserializeUser");
                 done(err, user);
             });
         });

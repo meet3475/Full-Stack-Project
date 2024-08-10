@@ -22,14 +22,14 @@ const craeteToken = async (id) => {
             expiresIn: '1 hours'
         },
             process.env.USER_ACCESS_TOKEN_KEY,
-            { expiresIn: process.env.USER_ACCESS_TOKEN_EXPIRY }
+            { expiresIn: 3600 }
         )
 
         const refreshToken = await jwt.sign({
             _id: id,
         },
         process.env.USER_REFRESH_TOKEN_KEY,
-            { expiresIn: process.env.USER_REFRESH_TOKEN_KEY}
+            { expiresIn: '2 days'}
         )
 
         user.refreshToken = refreshToken;
@@ -45,6 +45,12 @@ const craeteToken = async (id) => {
 
 
 const ragister = async (req, res) => {
+
+    console.log(req.body);
+
+    console.log(req.file);
+    
+
     try {
 
         const { email, password } = req.body
@@ -61,7 +67,7 @@ const ragister = async (req, res) => {
         }
         const hashPassword = await bcrypt.hash(password, 10)
 
-        const userData = await Users.create({ ...req.body, password: hashPassword })
+        const userData = await Users.create({ ...req.body, password: hashPassword, avtar: req.file.path })
 
         if (!userData) {
             return res.status(500).json({
@@ -179,7 +185,7 @@ const login = async (req, res) => {
 
 const generateNewTokens = async (req, res) => {
     try {
-        console.log(req.cookies.refreshToken);
+        console.log("generateNewTokens", req.cookies.refreshToken);
 
         const VerifyToken = await jwt.verify(req.cookies.refreshToken, process.env.USER_REFRESH_TOKEN_KEY);
         console.log(VerifyToken);

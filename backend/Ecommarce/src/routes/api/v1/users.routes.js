@@ -4,6 +4,7 @@ const passport = require("passport");
 const sentMail = require("../../../utils/nodemailer");
 const exportpdfmake = require("../../../utils/pdfmake");
 const { sendOTP, verifyOTP } = require("../../../utils/twilio");
+const upload = require("../../../middlewar/upload");
 
 
 
@@ -12,6 +13,7 @@ const routes = express.Router();
 
 routes.post(
     '/register',
+    upload.single('avtar'),
     usersController.ragister
 )
 
@@ -45,7 +47,8 @@ routes.post(
 
 routes.get(
     '/googleLogin',
-    passport.authenticate('google', { scope: ['profile', 'email'] }));
+    passport.authenticate('google', { scope: ['profile', 'email'] })
+);
 
 routes.get(
     '/google/callback',

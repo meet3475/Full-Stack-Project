@@ -27,10 +27,13 @@ const usersSchema = new mongooes.Schema(
             type: String,
             // required: true
         },
-        // googleId: {
-        //     type: String
-        // },
+        googleId: {
+            type: String
+        },
         facebookId: {
+            type: String
+        },
+        avtar: {
             type: String
         },
         isActive: {
