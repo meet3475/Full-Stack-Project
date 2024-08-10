@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
-import axios from 'axios';
+
 
 const AuthForm = () => {
   // Set initial form type to 'signup'
