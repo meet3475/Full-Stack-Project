@@ -122,9 +122,9 @@ function Header(props) {
                     {totalQtyData}
                   </span>
                 </NavLink>
-                <a href="#" className="my-auto">
+                <NavLink to={`/authForm`} href="#" className="my-auto">
                   <i className="fas fa-user fa-2x" />
-                </a>
+                </NavLink>
               </div>
               {themeContext.theme === 'light' ? <LightModeIcon onClick={handleTheme} /> : <DarkModeIcon onClick={handleTheme} />}
             </div>

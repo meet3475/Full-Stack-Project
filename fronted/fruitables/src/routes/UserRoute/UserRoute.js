@@ -16,6 +16,7 @@ import { ThemeContext } from '../../Context/ThemeContext';
 import Login from '../../user/containers/Login/Login';
 import Register from '../../user/containers/Register/Register';
 import Chat from '../../user/containers/Chat/Chat';
+import AuthForm from '../../user/containers/AuthForm/AuthForm';
 
 
 function UserRoute(props) {
@@ -40,6 +41,7 @@ function UserRoute(props) {
                     {/* <Route exact path="/Shop_Detail" element={<Shop_Detail />} /> */}
 
                     <Route exact path="/Cart" element={<Cart />} />
+                    <Route exact path="/authForm" element={<AuthForm />} />
                     <Route exact path="/chat" element={<Chat />} />
                     <Route exact path="/Chackout" element={<Chackout />} />
                     <Route exact path="/Testimonial" element={<Testimonial />} />
