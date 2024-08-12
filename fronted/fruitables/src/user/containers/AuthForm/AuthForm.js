@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import { register } from '../../../redux/slice/auth.slice';
+import { login, register } from '../../../redux/slice/auth.slice';
 
 
 const AuthForm = () => {
@@ -45,7 +45,7 @@ const AuthForm = () => {
           console.log("signup Page");
           dispatch(register({...values, 'role':'user'}))
         } else if (formType === 'login') {
-            console.log("login Page");
+          dispatch(login(values))
         } else if (formType === 'forgot') {
             console.log("forgot Page");
         }
