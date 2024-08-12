@@ -48,7 +48,7 @@ const ragister = async (req, res) => {
 
     console.log(req.body);
 
-    console.log(req.file);
+    // console.log(req.file);
     
 
     try {
@@ -67,7 +67,7 @@ const ragister = async (req, res) => {
         }
         const hashPassword = await bcrypt.hash(password, 10)
 
-        const userData = await Users.create({ ...req.body, password: hashPassword, avtar: req.file.path })
+        const userData = await Users.create({ ...req.body, password: hashPassword,  }) //avtar: req.file.path
 
         if (!userData) {
             return res.status(500).json({

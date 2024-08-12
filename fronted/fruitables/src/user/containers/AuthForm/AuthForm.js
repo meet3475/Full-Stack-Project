@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { object, string } from 'yup';
 import { useFormik } from 'formik';
+import { useDispatch, useSelector } from 'react-redux';
+import { register } from '../../../redux/slice/auth.slice';
 
 
 const AuthForm = () => {
   // Set initial form type to 'signup'
-  const [formType, setFormType] = useState('signup'); // 'signup', 'login', 'forgot'
+  const [formType, setFormType] = useState('signup'); // 'signup', 'login', 'forgot'\
+
+  const dispatch = useDispatch();
+
+  const auth = useSelector((state) => state.auth)
+  console.log(auth);
+  
 
   const registerSchema = object({
     name: string().required("Please Enter Name"),
     email: string().required("Please Enter Email"),
     password: string().required("Please Enter Password"),
-    role: string().required("Please Enter Role"),
   });
 
   const loginSchema = object({
@@ -27,8 +34,7 @@ const AuthForm = () => {
     initialValues: {
       name: '',
       email: '',
-      password: '',
-      role: '',
+      password: ''
     },
     validationSchema: formType === 'signup' ? registerSchema :
       formType === 'login' ? loginSchema :
@@ -37,6 +43,7 @@ const AuthForm = () => {
       try {
         if (formType === 'signup') {
           console.log("signup Page");
+          dispatch(register({...values, 'role':'user'}))
         } else if (formType === 'login') {
             console.log("login Page");
         } else if (formType === 'forgot') {
@@ -95,20 +102,6 @@ const AuthForm = () => {
               value={values.password}
             />
             {errors.password && touched.password ? <span style={{ color: "red" }}>{errors.password}</span> : null}
-          </div>
-        </div>
-        <div className="col-lg-6">
-          <div className="border-bottom rounded">
-            <input
-              type="text"
-              className="form-control border-0"
-              placeholder="Your Role *"
-              name="role"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.role}
-            />
-            {errors.role && touched.role ? <span style={{ color: "red" }}>{errors.role}</span> : null}
           </div>
         </div>
         <div className="col-lg-12">
