@@ -8,6 +8,8 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import { getData } from '../../../redux/action/category.action';
 import { getSubData } from '../../../redux/slice/subcategory.slice';
 import { getProduct } from '../../../redux/action/product.action';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { logout } from '../../../redux/slice/auth.slice';
 
 function Header(props) {
   const cart = useSelector(state => state.cart);
@@ -19,6 +21,9 @@ function Header(props) {
   const categories = useSelector((state) => state.categories.categories);
   const subcategories = useSelector((state) => state.subcategories.subcategories);
   const product = useSelector((state) => state.product.product);
+
+
+  const { isAuthentication, user } = useSelector((state) => state.auth);
 
   const totalQtyData = cart.cart.reduce((acc, v) => acc + v.qty, 0);
 
@@ -54,6 +59,10 @@ function Header(props) {
 
     navigate('/Shop', { state: { subcategory_id } });
   };
+
+  const handleLogout = () => {
+    dispatch(logout(user._id));
+  }
 
   return (
     <div>
@@ -122,9 +131,13 @@ function Header(props) {
                     {totalQtyData}
                   </span>
                 </NavLink>
-                <NavLink to={`/authForm`} href="#" className="my-auto">
-                  <i className="fas fa-user fa-2x" />
-                </NavLink>
+
+                {
+                  isAuthentication ? <LogoutIcon fontSize='large' onClick={handleLogout}/> : 
+                  <NavLink to={`/authForm`} href="#" className="my-auto">
+                    <i className="fas fa-user fa-2x" />
+                  </NavLink>
+                }
               </div>
               {themeContext.theme === 'light' ? <LightModeIcon onClick={handleTheme} /> : <DarkModeIcon onClick={handleTheme} />}
             </div>

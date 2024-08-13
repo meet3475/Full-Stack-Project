@@ -257,7 +257,7 @@ const logout = async (req, res) => {
         )
 
         console.log(user);
-
+        
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -265,9 +265,13 @@ const logout = async (req, res) => {
             });
         }
 
-        res.status(200).json({
+        res.status(200)
+        .clearCookie("accessToken")
+        .clearCookie("refreshToken")
+        .json({
             success: true,
             message: "User Logeed Out."
+
         });
 
     } catch (error) {
