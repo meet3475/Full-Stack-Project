@@ -87,8 +87,8 @@ function Header(props) {
             <button className="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
               <span className="fa fa-bars text-primary" />
             </button>
-            <div className="collapse navbar-collapse" id="navbarCollapse">
-              <div className="navbar-nav mx-auto">
+            <div className={`collapse navbar-collapse ${themeContext.theme}`} id="navbarCollapse">
+              <div className={`navbar-nav mx-auto ${themeContext.theme}`}>
                 <NavLink to='/' className="nav-item nav-link active">Home</NavLink>
                 <NavLink to='/Shop' className="nav-item nav-link">Shop</NavLink>
                 <NavLink to='/Shop_Detail' className="nav-item nav-link">Shop Detail</NavLink>
@@ -120,7 +120,7 @@ function Header(props) {
                 {/* <NavLink to='/Register' className="nav-item nav-link">Register</NavLink>
                 <NavLink to='/Login' className="nav-item nav-link">Login</NavLink> */}
               </div>
-              <div className="d-flex m-3 me-0">
+              <div className="d-flex m-3 me-0 align-items-center">
                 <button className="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i className="fas fa-search text-primary" /></button>
                 <NavLink to={`/Cart`} className="position-relative me-4 my-auto">
                   <i className="fa fa-shopping-bag fa-2x" />
@@ -133,13 +133,14 @@ function Header(props) {
                 </NavLink>
 
                 {
-                  isAuthentication ? <LogoutIcon fontSize='large' onClick={handleLogout}/> : 
+                  isAuthentication ? <LogoutIcon fontSize='large' className='me-3'  onClick={handleLogout}/> : 
                   <NavLink to={`/authForm`} href="#" className="my-auto">
                     <i className="fas fa-user fa-2x" />
                   </NavLink>
                 }
+                {themeContext.theme === 'light' ? <LightModeIcon fontSize='large' onClick={handleTheme} /> : <DarkModeIcon fontSize='large' onClick={handleTheme} />}
               </div>
-              {themeContext.theme === 'light' ? <LightModeIcon onClick={handleTheme} /> : <DarkModeIcon onClick={handleTheme} />}
+              
             </div>
           </nav>
         </div>

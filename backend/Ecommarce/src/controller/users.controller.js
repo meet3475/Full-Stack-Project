@@ -28,8 +28,8 @@ const craeteToken = async (id) => {
         const refreshToken = await jwt.sign({
             _id: id,
         },
-        process.env.USER_REFRESH_TOKEN_KEY,
-            { expiresIn: '2 days'}
+            process.env.USER_REFRESH_TOKEN_KEY,
+            { expiresIn: '10 days' }
         )
 
         user.refreshToken = refreshToken;
@@ -49,7 +49,7 @@ const ragister = async (req, res) => {
     console.log(req.body);
 
     // console.log(req.file);
-    
+
 
     try {
 
@@ -67,7 +67,7 @@ const ragister = async (req, res) => {
         }
         const hashPassword = await bcrypt.hash(password, 10)
 
-        const userData = await Users.create({ ...req.body, password: hashPassword,  }) //avtar: req.file.path
+        const userData = await Users.create({ ...req.body, password: hashPassword, }) //avtar: req.file.path
 
         if (!userData) {
             return res.status(500).json({
@@ -106,10 +106,10 @@ const ragister = async (req, res) => {
 
 const ragisterOTP = async (req, res) => {
 
-        res.status(200).json({
-            success: true,
-            message: "ragister with OTP succesfully"
-        })
+    res.status(200).json({
+        success: true,
+        message: "ragister with OTP succesfully"
+    })
 
 }
 
@@ -157,14 +157,21 @@ const login = async (req, res) => {
 
         const userDataF = await Users.findById({ _id: user._id }).select("-password -refreshToken")
 
-        const option = {
+        const accessTokenoption = {
             httpOnly: true,
-            secure: true
+            secure: true,
+            maxAge: 60 * 60 * 1000
+        }
+
+        const refreshTokenoption = {
+            httpOnly: true,
+            secure: true,
+            maxAge: 60 * 60 * 24 * 10 * 1000
         }
 
         res.status(200)
-            .cookie("accessToken", accessToken, option)
-            .cookie("refreshToken", refreshToken, option)
+            .cookie("accessToken", accessToken, accessTokenoption)
+            .cookie("refreshToken", refreshToken, refreshTokenoption)
             .json({
                 success: true,
                 message: "Login Sucessfully",
@@ -240,7 +247,7 @@ const generateNewTokens = async (req, res) => {
             message: "internal server error" + error.message
         })
     }
-} 
+}
 
 const logout = async (req, res) => {
     try {
@@ -249,7 +256,7 @@ const logout = async (req, res) => {
         const user = await Users.findByIdAndUpdate(
             req.body._id,
             {
-                $unset :{ refreshToken : 1}
+                $unset: { refreshToken: 1 }
             },
             {
                 new: true
@@ -257,7 +264,7 @@ const logout = async (req, res) => {
         )
 
         console.log(user);
-        
+
         if (!user) {
             return res.status(400).json({
                 success: false,
@@ -266,16 +273,52 @@ const logout = async (req, res) => {
         }
 
         res.status(200)
-        .clearCookie("accessToken")
-        .clearCookie("refreshToken")
-        .json({
-            success: true,
-            message: "User Logeed Out."
+            .clearCookie("accessToken")
+            .clearCookie("refreshToken")
+            .json({
+                success: true,
+                message: "User Logeed Out."
 
-        });
+            });
 
     } catch (error) {
         console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error: " + error.message
+        });
+    }
+}
+
+const checkAuth = async (req, res) => {
+    try {
+        const accessToken = req.cookies.accessToken
+        console.log(accessToken);
+
+        if (!accessToken) {
+            return res.status(400).json({
+                success: false,
+                message: "Token not Found."
+            });
+        }
+
+        const verifyUser = await jwt.verify(accessToken, process.env.USER_ACCESS_TOKEN_KEY)
+        console.log(verifyUser);
+        
+        if (!verifyUser) {
+            return res.status(400).json({
+                success: false,
+                message: "Token Expire or Invalid Token."
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            data: verifyUser,
+            message: "User Authenticated."
+        });
+
+    } catch (error) {
         return res.status(500).json({
             success: false,
             message: "Internal server error: " + error.message
@@ -291,5 +334,6 @@ module.exports = {
     verifyotp,
     login,
     generateNewTokens,
-    logout
+    logout,
+    checkAuth
 } 

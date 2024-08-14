@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Header from '../../user/components/Header/Header';
 import { Route, Routes } from 'react-router-dom';
 import Home from '../../user/containers/Home/Home';
@@ -17,12 +17,20 @@ import Login from '../../user/containers/Login/Login';
 import Register from '../../user/containers/Register/Register';
 import Chat from '../../user/containers/Chat/Chat';
 import AuthForm from '../../user/containers/AuthForm/AuthForm';
+import { useDispatch } from 'react-redux';
+import { checkAuth } from '../../redux/slice/auth.slice';
 
 
 function UserRoute(props) {
 
     const theme = useContext(ThemeContext);
     console.log(theme);
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(checkAuth())
+    }, [])
 
     return (
         <div className={theme.theme}>

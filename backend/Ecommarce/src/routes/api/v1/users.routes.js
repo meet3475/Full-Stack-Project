@@ -46,6 +46,11 @@ routes.post(
 )
 
 routes.get(
+    '/checkAuth',
+    usersController.checkAuth
+)
+
+routes.get(
     '/googleLogin',
     passport.authenticate('google', { scope: ['profile', 'email'] })
 );

@@ -49,7 +49,7 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async (_id, { rejectWithValue }) => {
         try {
-            const response = await axiosInstance.post('users/logout', {_id});
+            const response = await axiosInstance.post('users/logout', { _id });
             console.log(response);
 
             if (response.status === 200) {
@@ -62,6 +62,26 @@ export const logout = createAsyncThunk(
 
     }
 )
+
+export const checkAuth = createAsyncThunk(
+    'auth/checkAuth',
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await axiosInstance.get('users/checkAuth');
+            console.log(response);
+            if (response.data.success) {
+                return response.data
+            }
+        }
+        catch (error) {
+            console.log(error);
+            return rejectWithValue("Check auth error: " + error.response.data.message)
+        }
+    }
+
+
+)
+
 
 const authSlice = createSlice({
     name: 'auth',
@@ -109,6 +129,22 @@ const authSlice = createSlice({
         builder.addCase(logout.rejected, (state, action) => {
             state.isAuthentication = true;
             state.isLogeedOut = false;
+            state.isLoading = false;
+            state.user = null;
+            state.error = action.payload;
+        });
+
+        builder.addCase(checkAuth.fulfilled, (state, action) => {
+            state.isAuthentication = true;
+            state.isLogeedOut = false;
+            state.isLoading = false;
+            state.user = action.payload.data;
+            state.error = null;
+        });
+
+        builder.addCase(checkAuth.rejected, (state, action) => {
+            state.isAuthentication = false;
+            state.isLogeedOut = true;
             state.isLoading = false;
             state.user = null;
             state.error = action.payload;
