@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axiosInstance from "../../utils/axiosInstance"
+import { setAlert } from "./alerts.slice";
 
 const initialState = {
     isAuthentication: false,
@@ -29,13 +30,14 @@ export const register = createAsyncThunk(
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (data, { rejectWithValue }) => {
+    async (data, {dispatch, rejectWithValue }) => {
         try {
             const response = await axiosInstance.post('users/login', data);
             console.log(response);
 
             if (response.status === 200) {
                 localStorage.setItem("_id", response.data.data._id)
+                dispatch(setAlert({color: 'success', message:response.data.message }))
                 return response.data
             }
         } catch (error) {
@@ -48,9 +50,10 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk(
     'auth/logout',
-    async (_id, { rejectWithValue }) => {
+    async (_id, { dispatch, rejectWithValue }) => {
         try {
             const response = await axiosInstance.post('users/logout', { _id });
+            dispatch(setAlert({color: 'error', message:response.data.message }))
             console.log(response);
 
             if (response.status === 200) {
@@ -58,6 +61,7 @@ export const logout = createAsyncThunk(
             }
         } catch (error) {
             console.log(error);
+            dispatch(setAlert({color: 'error', message:error.data.message }))
             return rejectWithValue("Logout error: " + error.response.data.message)
         }
 

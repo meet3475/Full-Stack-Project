@@ -9,18 +9,21 @@ import { ThemeProvider } from "./Context/ThemeContext";
 import Chechout from "./admine/containers/Checkout/Checkout";
 import { CheckProvider } from "./Context/CheckoutContext";
 import { ContactProvider } from "./Context/ContactContext";
-
+import { SnackbarProvider} from 'notistack';
+import Alerts from "./user/components/Alerts/Alerts";
 
 
 function App() {
   const {store, persistor} = storeReduce();
 
   return (
+    <SnackbarProvider>
     <ContactProvider>
     <CheckProvider>
     <ThemeProvider>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
+        <Alerts/>
         <Routes>
           <Route exact path="/*" element={<UserRoute />} />
           <Route element={<PrivateRoute />}>
@@ -32,6 +35,7 @@ function App() {
     </ThemeProvider>
     </CheckProvider>
     </ContactProvider>
+    </SnackbarProvider>
   );
 }
 
