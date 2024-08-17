@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import {  login, register } from '../../../redux/slice/auth.slice';
+import { login, register } from '../../../redux/slice/auth.slice';
 import { Navigate } from 'react-router-dom';
+import GoogleIcon from '@mui/icons-material/Google';
+import { Badge } from 'reactstrap';
 
 function AuthForm(props) {
     const [type, setType] = useState('login');
@@ -13,8 +15,8 @@ function AuthForm(props) {
     const auth = useSelector((state) => state.auth);
 
     console.log(auth);
-    
-    
+
+
     let authSchema = {}, initialVal = {};
 
     if (type === 'signup') {
@@ -55,7 +57,7 @@ function AuthForm(props) {
         enableReinitialize: true,
         onSubmit: values => {
             if (type === 'signup') {
-                dispatch(register({...values, 'role': 'user'}))
+                dispatch(register({ ...values, 'role': 'user' }))
             } else if (type === 'login') {
                 // console.log(values);
                 dispatch(login(values));
@@ -76,6 +78,12 @@ function AuthForm(props) {
         return <Navigate to="/" />
     }
     // console.log(errors, touched);
+
+
+    const handleGoogleLogin = () => {
+        window.location.href = "http://localhost:8000/api/v1/users/googleLogin"
+    }
+
     return (
         <div>
             {/* Single Page Header start */}
@@ -115,7 +123,7 @@ function AuthForm(props) {
                                             onBlur={handleBlur}
                                             value={values.name}
                                         />
-                                        <span style={{color: "red"}}>{errors.name && touched.name ? errors.name : null}</span>
+                                        <span style={{ color: "red" }}>{errors.name && touched.name ? errors.name : null}</span>
                                     </div>
                                     : null
                             }
@@ -132,7 +140,7 @@ function AuthForm(props) {
                                     onBlur={handleBlur}
                                     value={values.email}
                                 />
-                                <span style={{color: "red"}}>{errors.email && touched.email ? errors.email : null}</span>
+                                <span style={{ color: "red" }}>{errors.email && touched.email ? errors.email : null}</span>
                             </div>
                             {
                                 type !== 'forgot' ?
@@ -149,7 +157,7 @@ function AuthForm(props) {
                                             onBlur={handleBlur}
                                             value={values.password}
                                         />
-                                        <span style={{color: "red"}}>{errors.password && touched.password ? errors.password : null}</span>
+                                        <span style={{ color: "red" }}>{errors.password && touched.password ? errors.password : null}</span>
                                     </div>
                                     : null
                             }
@@ -167,9 +175,29 @@ function AuthForm(props) {
                         </div>
                         <button type="submit" className="btn btn-primary">Submit</button>
                     </form>
-                </div>
+                    <Badge
+                        color="primary"
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '200px',
+                            height: '50px',
+                            margin: '20px 0',
+                            fontSize: '16px',
+                            cursor: 'pointer',
+                            padding: '10px',
+                            borderRadius: '8px'
+                        }}
+                    onClick={handleGoogleLogin}
+                    >
+                    <GoogleIcon style={{ marginRight: '8px' }} />
+                    <span>Sign in With Google</span>
+                </Badge>
+
             </div>
         </div>
+        </div >
     );
 }
 
