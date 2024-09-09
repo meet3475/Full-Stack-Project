@@ -122,7 +122,44 @@ routes.get(
     exportpdfmake
 )
 
+routes.get(
+    '/list-user', 
+    usersController.listUser
+)
 
+routes.get(
+    '/get-user/:user_id', 
+    usersController.getUsers
+)
 
+routes.put(
+    '/update-user/:user_id',
+    usersController.updateusers
+)
+
+routes.delete(
+    '/delete-user/:user_id',
+    usersController.deleteusers
+)
+
+routes.get(
+    '/searchuser',
+    usersController.searchUser
+)
+
+routes.get(
+    '/order/:user_id',
+    usersController.allOrder
+)
+
+routes.get(
+    '/review/:user_id',
+    usersController.reviewsuser
+)
+
+routes.get(
+    '/deactivate/:user_id',
+    usersController.deActive
+)
 
 module.exports = routes;

@@ -304,7 +304,7 @@ const checkAuth = async (req, res) => {
 
         const verifyUser = await jwt.verify(accessToken, process.env.USER_ACCESS_TOKEN_KEY)
         console.log(verifyUser);
-        
+
         if (!verifyUser) {
             return res.status(400).json({
                 success: false,
@@ -326,7 +326,263 @@ const checkAuth = async (req, res) => {
     }
 }
 
+const listUser = async (req, res) => {
+    try {
+        const users = await Users.find();
+        console.log(users);
 
+
+        if (!users || users.length === 0) {
+            res.status(404).json({
+                success: false,
+                message: "users data not found",
+            });
+        }
+        res.status(200).json({
+            success: true,
+            message: "users data fetched",
+            data: users,
+        });
+
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error" + error.message
+        })
+    }
+}
+
+const getUsers = async (req, res) => {
+    try {
+        const users = await Users.findById(req.params.user_id)
+        if (!users) {
+            res.status(404).json({
+                success: false,
+                message: "Data not found." + error.message
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "users Data fetched",
+            data: users
+        })
+
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Internal server error" + error.message
+        })
+    }
+}
+
+const deleteusers = async (req, res) => {
+    try {
+        const users = await Users.findByIdAndDelete(req.params.user_id);
+        console.log(users);
+
+        if (!users) {
+            res.status(404).json({
+                success: false,
+                message: "users not found"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "users Deleted sucessfully",
+            data: users
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Intenal server error." + error.message
+        })
+    }
+}
+
+const updateusers = async (req, res) => {
+    try {
+        const users = await Users.findByIdAndUpdate(req.params.user_id, req.body, { new: true, runValidators: true });
+        console.log(users);
+
+        if (!users) {
+            res.status(400).json({
+                success: false,
+                message: "users not Update"
+            })
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "users Update sucessfully",
+            data: users
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Intenal server error." + error.message
+        })
+    }
+}
+
+const searchUser = async (req, res) => {
+    try {
+        const { name, email, mobile_no, page, limit } = req.query;
+
+        const matchPip = {};
+
+        if (name) {
+            matchPip['name'] = { $regex: new RegExp(name, 'i') };
+        }
+
+        if (email) {
+            matchPip['email'] = { $regex: new RegExp(email, 'i') };
+        }
+
+        if (mobile_no) {
+            matchPip['mobile_no'] = { $regex: new RegExp(mobile_no, 'i') };
+        }
+
+        console.log(matchPip);
+
+        const pipline = [
+            {
+                $match: matchPip
+            },
+            {
+                $sort: {
+                    name: 1 // Sorting by name in ascending order
+                }
+            }
+        ];
+
+        if (parseInt(page) > 0 && parseInt(limit) > 0) {
+            pipline.push({ $skip: (parseInt(page) - 1) * parseInt(limit) });
+            pipline.push({ $limit: parseInt(limit) });
+        }
+
+        const data = await Users.aggregate(pipline);
+        console.log(data);
+
+        res.status(200).json({
+            success: true,
+            data: data,
+            message: "User data fetched successfully",
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error." + error.message
+        });
+    }
+}
+
+const allOrder = async (req, res) => {
+    const users = await Users.aggregate([
+        {
+            $match: {
+                isActive: true
+            }
+        },
+        {
+            $lookup: {
+                from: "orders",
+                localField: "_id",
+                foreignField: "user_id",
+                as: "userOrders"
+            }
+        },
+        {
+            $unwind: {
+                path: "$userOrders",
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                email: 1,
+                "userOrders.orderId": 1,
+                "userOrders.orderDate": 1,
+                "userOrders.totalAmount": 1
+            }
+        },
+        {
+            $sort: {
+                "userOrders.orderDate": -1
+            }
+        },
+        {
+            $limit: 100
+        }
+    ]
+    )
+
+    res.status(200).json({
+        success: true,
+        message: "users get  succesfully",
+        data: users
+    })
+
+    console.log(users);
+}
+
+const reviewsuser = async (req, res) => {
+    const users = await Users.aggregate([
+        {
+            $lookup: {
+                from: "users",
+                localField: "user_id",
+                foreignField: "_id",
+                as: "user"
+            }
+        },
+        {
+            $match: {
+                user: { $ne: [] }
+            }
+        }
+    ]
+    )
+
+    res.status(200).json({
+        success: true,
+        message: "users get  succesfully",
+        data: users
+    })
+
+    console.log(users);
+}
+
+const deActive = async (req, res) => {
+    const users = await Users.aggregate([
+        {
+            $match: {
+                "isActive": false
+            }
+        },
+        {
+            $count: 'noOfDeactive'
+        }
+    ]
+    )
+
+    res.status(200).json({
+        success: true,
+        message: "users get  succesfully",
+        data: users
+    })
+
+    console.log(users);
+}
 
 module.exports = {
     ragister,
@@ -336,5 +592,13 @@ module.exports = {
     generateNewTokens,
     logout,
     checkAuth,
-    craeteToken
+    craeteToken,
+    listUser,
+    getUsers,
+    deleteusers,
+    updateusers,
+    searchUser,
+    allOrder,
+    reviewsuser,
+    deActive
 } 

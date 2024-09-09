@@ -10,7 +10,7 @@ const routes = express.Router();
 //localhost:3000/api/v1/categories/list-categories
 routes.get(
     '/list-categories',
-    // auth(["admin", "user"]),
+    auth(["admin", "user"]),
     categoriesController.listcategories
 )
 
@@ -20,7 +20,7 @@ routes.get(
 // )
 
 routes.get(
-    '/get-categories',
+    '/get-categories/:category_id',
     Validation(categoryValidation.getcategory),
     categoriesController.getcategory
 )
